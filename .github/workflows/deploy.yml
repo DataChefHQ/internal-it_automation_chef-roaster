@@ -2,6 +2,9 @@ name: "Deploy"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -22,33 +25,18 @@ jobs:
           role-to-assume: arn:aws:iam::640721796322:role/GithubCIRole
           aws-region: eu-west-1
 
-      - name: Log in to Amazon ECR
-        id: ecr_login
-        run: |
-          aws ecr get-login-password --region eu-west-1 |\
-           docker login --username AWS\
-            --password-stdin 640721796322.dkr.ecr.eu-west-1.amazonaws.com
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+
+      - name: install serverless
+        run: npm i -g serverless@3
+
+      - name: serverless deploy
+        run: sls deploy --verbose
         env:
-          AWS_REGION: eu-west-1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Create and use a new builder instance
-        run: |
-          docker buildx create --name mybuilder --use
-
-      - uses: cachix/install-nix-action@v26
-      - name: Install devenv.sh
-        run: nix profile install nixpkgs#devenv
-
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Run build-ii-services
-        run: devenv shell build-ii-services
-
-      - name: Run build-notion-api
-        run: devenv shell build-notion-api
-
-      - name: Deploy Serverless
-        run: devenv shell npm run deploy
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
