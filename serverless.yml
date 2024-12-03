@@ -2,7 +2,6 @@ service: chef-roaster
 useDotenv: true
 
 plugins:
-  - serverless-esbuild
   - serverless-offline
   - serverless-plugin-warmup
 
@@ -25,7 +24,7 @@ provider:
   runtime: python3.11
   stage: prod
   memorySize: 768
-  timeout: 600
+  timeout: 30
   region: eu-west-1
   lambdaHashingVersion: 20201221
   stackTags:
@@ -39,17 +38,6 @@ custom:
       events:
         - schedule: rate(5 minutes)
       prewarm: true
-  esbuild:
-    concurrency: 10
-    config: "./esbuild.config.js"
-  datadog:
-    site: ${self:provider.environment.DD_SITE}
-    apiKeySecretArn: ${self:provider.environment.DD_API_KEY_SECRET_ARN}
-    exclude:
-      - db_dedupe
-      - app
-      - skill_mapper
-      - joturl_app
 
 package:
   exclude:
