@@ -1,0 +1,71 @@
+service: chef-roaster
+useDotenv: true
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-plugin-warmup
+
+provider:
+  name: aws
+
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite
+      statements:
+        - Effect: "Allow"
+          Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+            - s3:*
+            - dynamodb:*
+            - sqs:*
+          Resource: "*"
+  runtime: python3.11
+  stage: prod
+  memorySize: 768
+  timeout: 600
+  region: eu-west-1
+  lambdaHashingVersion: 20201221
+  stackTags:
+    owner: "Soheil Sheybani"
+    project: "automation"
+
+custom:
+  warmup:
+    default:
+      enabled: true
+      events:
+        - schedule: rate(5 minutes)
+      prewarm: true
+  esbuild:
+    concurrency: 10
+    config: "./esbuild.config.js"
+  datadog:
+    site: ${self:provider.environment.DD_SITE}
+    apiKeySecretArn: ${self:provider.environment.DD_API_KEY_SECRET_ARN}
+    exclude:
+      - db_dedupe
+      - app
+      - skill_mapper
+      - joturl_app
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+    - __pycache__/**
+    - crm/__pycache__/**
+    - .idea/**
+
+functions:
+  app:
+    handler: src/main.lambda_handler
+    events:
+      - http:
+          cors: true
+          method: ANY
+          path: /{proxy+}
+    environment:
+      BUCKET_NAME: chef-roaster

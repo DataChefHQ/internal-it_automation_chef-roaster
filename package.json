@@ -1,0 +1,17 @@
+{
+  "name": "chef_roaster",
+  "version": "1.0.0",
+  "description": "This AI project is developed to guess the chef based on their characteristics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "^4.4.13",
+    "serverless-esbuild": "^1.54.6",
+    "serverless-offline": "^14.3.4",
+    "serverless-plugin-warmup": "^8.3.0"
+  }
+}
