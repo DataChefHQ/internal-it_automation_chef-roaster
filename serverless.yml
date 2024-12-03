@@ -19,7 +19,6 @@ provider:
             - lambda:InvokeAsync
             - s3:*
             - dynamodb:*
-            - sqs:*
           Resource: "*"
   runtime: python3.10
   stage: prod
@@ -32,28 +31,20 @@ provider:
     project: "automation"
 
 custom:
+  pythonRequirements:
+    dockerizePip: non-linux
   warmup:
     default:
       enabled: true
       events:
         - schedule: rate(5 minutes)
       prewarm: true
-  pythonRequirements:
-    dockerizePip: non-linux
-    zip: true
-    slim: true
-    noDeploy: false
 
 package:
-  include:
-    - requirements.txt
-    - src/**
   exclude:
     - node_modules/**
     - venv/**
     - __pycache__/**
-    - crm/__pycache__/**
-    - .idea/**
 
 functions:
   app:
@@ -63,5 +54,9 @@ functions:
           cors: true
           method: ANY
           path: /{proxy+}
+      - http:
+          cors: true
+          method: ANY
+          path: /
     environment:
       BUCKET_NAME: chef-roaster

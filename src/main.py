@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, render_template, jsonify
 import boto3
 import awsgi
@@ -7,7 +9,7 @@ s3_client = boto3.client('s3')
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
@@ -18,8 +20,16 @@ def submit():
     # Return a loading message while processing in the background
     return jsonify({"status": "loading", "message": "Processing your request..."})
 
+@app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+def catch_all(path):
+    """Catches all requests."""
+    return jsonify({'error': f'Path {path} is not allowed.'}), 404
+
 
 def lambda_handler(event, context):
+    if 'source' in event and event['source'] == 'serverless-plugin-warmup':
+        return {}
+    print(json.dumps(event))
     return awsgi.response(app, event, context)
 
 
