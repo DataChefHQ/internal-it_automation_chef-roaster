@@ -5,7 +5,6 @@ plugins:
   - serverless-offline
   - serverless-plugin-warmup
   - serverless-python-requirements
-  - serverless-domain-manager
 
 provider:
   name: aws
@@ -44,11 +43,6 @@ custom:
     zip: true
     slim: true
     noDeploy: false
-  domain:
-    domainName: chefroaster.ai
-    certificateName: "*.chefroaster.ai"
-    createRoute53Record: true
-    endpointType: regional
 
 package:
   include:
