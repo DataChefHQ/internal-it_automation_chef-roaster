@@ -1,7 +1,5 @@
 from flask import Flask, render_template, jsonify
-import time
 import boto3
-import threading
 
 app = Flask(__name__)
 s3_client = boto3.client('s3')
