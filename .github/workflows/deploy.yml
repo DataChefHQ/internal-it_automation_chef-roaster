@@ -35,5 +35,14 @@ jobs:
       - name: install serverless
         run: npm i -g serverless@3
 
+      - name: install poetry
+        run: pip install poetry
+
+      - name: install dependencies
+        run: poetry install
+
+      - name: export requirements
+        run: poetry export -f requirements.txt --without-hashes --output requirements.txt
+
       - name: serverless deploy
         run: sls deploy --verbose

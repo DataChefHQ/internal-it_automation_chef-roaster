@@ -4,10 +4,10 @@ useDotenv: true
 plugins:
   - serverless-offline
   - serverless-plugin-warmup
+  - serverless-python-requirements
 
 provider:
   name: aws
-
   iam:
     role:
       managedPolicies:
@@ -38,8 +38,16 @@ custom:
       events:
         - schedule: rate(5 minutes)
       prewarm: true
+  pythonRequirements:
+    dockerizePip: non-linux
+    zip: true
+    slim: true
+    noDeploy: false
 
 package:
+  include:
+    - requirements.txt
+    - src/**
   exclude:
     - node_modules/**
     - venv/**
