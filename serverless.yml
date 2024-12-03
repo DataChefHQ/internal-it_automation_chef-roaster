@@ -5,6 +5,7 @@ plugins:
   - serverless-offline
   - serverless-plugin-warmup
   - serverless-python-requirements
+  - serverless-domain-manager
 
 provider:
   name: aws
@@ -21,7 +22,7 @@ provider:
             - dynamodb:*
             - sqs:*
           Resource: "*"
-  runtime: python3.11
+  runtime: python3.10
   stage: prod
   memorySize: 768
   timeout: 30
@@ -43,6 +44,11 @@ custom:
     zip: true
     slim: true
     noDeploy: false
+  domain:
+    domainName: chefroaster.ai
+    certificateName: "*.chefroaster.ai"
+    createRoute53Record: true
+    endpointType: regional
 
 package:
   include:
