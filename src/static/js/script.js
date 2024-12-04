@@ -2,12 +2,13 @@ function submitForm() {
     // Show loading spinner and message
     document.getElementById("loading").style.display = 'block';
     document.getElementById("spinner").style.display = 'block';
+    document.getElementById("image").style.display = 'none';
 
     // Get the prompt text
     var prompt = document.getElementById("prompt").value;
     fetch('/find', {
         method: 'POST',
-        body: JSON.stringify({ prompt: prompt }),
+        body: JSON.stringify({ message: prompt }),
         headers: { 'Content-Type': 'application/json' }
     }).then(
         response => response.json()
@@ -16,6 +17,7 @@ function submitForm() {
         document.getElementById("spinner").style.display = 'none';
         document.getElementById("image").src = data.url;
         document.getElementById("image").style.display = 'block';
+        document.getElementById("prompt").value = data.reason;
     });
 }
 
