@@ -1,16 +1,15 @@
-- Ali: Male, 24, Data Scientist, Iran - Tehran. 
-- Andrea: Female, 29, Data Engineer, Italy - Milan. 
-- Anne: Female, 32, Administrative Assistant, USA - New York. 
-- Ashkan: Male, 35, Founder & CEO, Iran - Tehran. 
-- Bram: Male, 28, Project Manager, Netherlands - Amsterdam. 
-- Davide: Male, 27, Software Engineer, Italy - Rome. 
-- Farbod: Male, 30, Software Engineer, Iran - Tehran. 
-- Federico: Male, 33, Software (Data) Engineer, Italy - Bologna. 
-- Jane: Female, 40, Executive Assistant, UK - London. 
-- Kiarash: Male, 26, Machine Learning Engineer, Iran - Tehran. 
-- Mahdokht: Female, 31, Data Scientist, Iran - Tehran. 
-- Melvyn: Male, 38, Senior Data Engineer, Belgium - Brussels. 
-- Pejman: Male, 34, Software Engineer, Iran - Tehran. 
-- Rehan: Male, 36, Senior Cloud Engineer, South Africa - Cape Town. 
-- Shahin: Male, 32, Senior Software (Data) Engineer, Iran - Tehran. 
-- Soheil: Male, 29, Machine Learning Engineer, Iran - Tehran.
+* Ali: Male, 23, Data Scientist, Iran - Tehran.
+* Andrea: Male, 30, Data Engineer, Italy - Berlin.
+* Anne: Female, 27, Administrative Assistant, Netherlands - Utrecht.
+* Bram: Male, 28, Big Data Engineer, Netherlands - Culemborg.
+* Davide: Male, 34, Senior Product Manager, Italy - Haarlem.
+* Farbod: Male, 22, Data (Software) Engineer, Iran - Amsterdam.
+* Federico: Male, 34, Software (Data) Engineer, Switzerland - Bologna.
+* Jane: Female, 28, Executive Assistant, Netherlands - Zoetermeer.
+* Kiarash: Male, 30, Machine Learning Engineer, Iran - Grootebroek.
+* Mahdokht: Female, 30, Hub Lead, Iran - Tehran.
+* Melvyn: Male, 29, Senior Software (Data) Engineer, United Kingdom - Herlev.
+* Pejman: Male, 30, Automation Engineer, Iran - Tehran.
+* Rehan: Male, 31, Senior Cloud Engineer, South Africa - Pretoria.
+* Shahin: Male, 34, Data Engineer, Iran - Haarlem.
+* Soheil: Male, 27, Automation Engineer, Iran - Tehran.
