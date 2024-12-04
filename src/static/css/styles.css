@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ECEFF1;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.central {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 95vh;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.button {
+    background-color: #1A237E;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    width: 260px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #1A237E;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    min-height: 80px;  /* Start height for multi-line input */
+    resize: vertical;  /* Allow vertical resizing */
+    transition: min-height 0.3s ease;
+}
+
+#loading {
+    font-size: 1.2rem;
+    color: #1A237E;
+    margin-top: 20px;
+    display: none;
+    position: relative;
+}
+
+#image {
+    display: none;
+    margin: 25px auto 0 auto;
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.75);
+}
+
+.spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #1A237E;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+footer {
+    background-color: #607D8B;
+    color: white;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    padding: 5px;
+    height: 5vh;
+}
+
+footer p {
+    margin-top: 5px;
+    color: #ffffff;
+}
+
+footer a {
+    font-weight: bold;
+    color: #F44336;
+    text-decoration: none;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: #ffffff;
+    font-size: 2rem;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 1000;
+    user-select: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}

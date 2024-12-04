@@ -1,12 +1,23 @@
 import json
+import os
+import time
 from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
 from bedrock import find_chef
 
 app = Flask(__name__)
-s3_client = boto3.client('s3')
+s3 = boto3.client('s3')
+bucket = os.environ.get('BUCKET_NAME', "chef-roaster")
 
+
+def sign_image(key):
+    url = s3.generate_presigned_url(
+        'get_object',
+        Params={'Bucket': bucket, 'Key': f'team/{key}'},
+        ExpiresIn=3600  # URL valid for 1 hour
+    )
+    return url
 
 
 @app.route('/', methods=['GET'])
@@ -19,10 +30,10 @@ def bedrock():
     return find_chef(request.get_json())
 
 
-@app.route('/submit', methods=['POST'])
+@app.route('/find', methods=['POST'])
 def submit():
-    # Return a loading message while processing in the background
-    return jsonify({"status": "loading", "message": "Processing your request..."})
+    time.sleep(5)
+    return jsonify({"url": sign_image('ali.jpg')})
 
 
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
