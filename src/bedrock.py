@@ -72,4 +72,4 @@ def find_chef(request):
     print(f"### {guessed_chef}")
     roast = get_the_roast(user_message=request['message'], chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
     print(f"$$$ {roast}")
-    return jsonify({"name": guessed_chef, "reason": roast})
+    return {"name": guessed_chef, "reason": roast}
