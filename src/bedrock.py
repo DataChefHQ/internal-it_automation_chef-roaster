@@ -39,7 +39,7 @@ def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> s
     """
     Get a response from the Bedrock AI model.
     """
-    prompt = f"Persons Descriptions: \n{descriptions}\n We are having a Roasting Party in our company. Our company is called DataChef and is fully remote. Based on the above Descriptions give a short but very funny roast for {chef_to_roast}. ONLY GIVE ME THE ROAST. NOTHING BEFORE OR AFTER IT."
+    prompt = f"DataChef Roasting Party! \n\nHere’s the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nDish out the funniest, most hilarious roast for {chef_to_roast}. Keep it short, FUNNY, and spicy. It doesn't need to be necessarily from their information. ONLY GIVE ME THE ROAST — nothing else!"
     messages = [{"role": "user", "content": [{"text": prompt}]}]
     bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
     
