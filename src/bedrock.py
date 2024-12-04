@@ -64,12 +64,12 @@ def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
 
 def find_chef(request):
     print(request) 
-    print(request['message'])
+    print(request['prompt'])
     print("###")
-    guessed_chef = guess_the_chef_name(user_message=request['message'], descriptions=DESCRIPTIONS)
+    guessed_chef = guess_the_chef_name(user_message=request['prompt'], descriptions=DESCRIPTIONS)
     print(f"## {guessed_chef}")
     guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
     print(f"### {guessed_chef}")
-    roast = get_the_roast(user_message=request['message'], chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
+    roast = get_the_roast(user_message=request['prompt'], chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "reason": roast}
