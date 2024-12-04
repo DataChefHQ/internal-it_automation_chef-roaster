@@ -14,22 +14,7 @@ TEMPERATURE = 0.7
 TOP_P = 0.9
 MAX_LEN = 1024
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
-DESCRIPTION = """- Ali: Male, 24, Data Scientist, Iran - Tehran. 
-- Andrea: Female, 29, Data Engineer, Italy - Milan. 
-- Anne: Female, 32, Administrative Assistant, USA - New York. 
-- Ashkan: Male, 35, Founder & CEO, Iran - Tehran. 
-- Bram: Male, 28, Project Manager, Netherlands - Amsterdam. 
-- Davide: Male, 27, Software Engineer, Italy - Rome. 
-- Farbod: Male, 30, Software Engineer, Iran - Tehran. 
-- Federico: Male, 33, Software (Data) Engineer, Italy - Bologna. 
-- Jane: Female, 40, Executive Assistant, UK - London. 
-- Kiarash: Male, 26, Machine Learning Engineer, Iran - Tehran. 
-- Mahdokht: Female, 31, Data Scientist, Iran - Tehran. 
-- Melvyn: Male, 38, Senior Data Engineer, Belgium - Brussels. 
-- Pejman: Male, 34, Software Engineer, Iran - Tehran. 
-- Rehan: Male, 36, Senior Cloud Engineer, South Africa - Cape Town. 
-- Shahin: Male, 32, Senior Software (Data) Engineer, Iran - Tehran. 
-- Soheil: Male, 29, Machine Learning Engineer, Iran - Tehran."""
+DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
 
 def guess_the_chef_name(user_message: str, descriptions: str) -> str:
     """
@@ -81,10 +66,10 @@ def find_chef(request):
     print(request) 
     print(request['message'])
     print("###")
-    guessed_chef = guess_the_chef_name(user_message=request['message'], descriptions=DESCRIPTION)
+    guessed_chef = guess_the_chef_name(user_message=request['message'], descriptions=DESCRIPTIONS)
     print(f"## {guessed_chef}")
     guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
     print(f"### {guessed_chef}")
-    roast = get_the_roast(user_message=request['message'], chef_to_roast=guessed_chef, descriptions=DESCRIPTION)
+    roast = get_the_roast(user_message=request['message'], chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
     print(f"$$$ {roast}")
     return jsonify({"name": guessed_chef, "reason": roast})
