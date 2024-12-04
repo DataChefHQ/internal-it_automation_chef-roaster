@@ -1,8 +1,8 @@
 import json
-
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
+from bedrock import find_chef
 
 app = Flask(__name__)
 s3_client = boto3.client('s3')
@@ -14,11 +14,16 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/bedrock', methods=['GET', 'POST'])
+def bedrock():
+    return find_chef(request.get_json())
+
+
 @app.route('/submit', methods=['POST'])
 def submit():
-
     # Return a loading message while processing in the background
     return jsonify({"status": "loading", "message": "Processing your request..."})
+
 
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
 def catch_all(path):
