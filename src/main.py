@@ -2,7 +2,7 @@ import json
 from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
-from bedrock import find_chef
+from .bedrock import find_chef
 
 app = Flask(__name__)
 s3_client = boto3.client('s3')
