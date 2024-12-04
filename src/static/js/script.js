@@ -29,3 +29,18 @@ function changeText(button) {
 function resetText(button) {
     button.textContent = "Show me the victim 👿";
 }
+
+function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.textContent = '❄';
+    snowflake.style.left = Math.random() * window.innerWidth + 'px';
+    snowflake.style.animationDuration = (Math.random() * 5 + 3) + 's';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(snowflake);
+
+    setTimeout(() => {
+        snowflake.remove();
+    }, 8000);
+}
+setInterval(createSnowflake, 100);

@@ -4,6 +4,7 @@ body {
     height: 100vh;
     margin: 0;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .central {
@@ -111,4 +112,25 @@ footer a {
     font-weight: bold;
     color: #F44336;
     text-decoration: none;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: #ffffff;
+    font-size: 2rem;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 1000;
+    user-select: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
 }
