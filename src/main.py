@@ -1,6 +1,5 @@
 import json
 import os
-import time
 from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
@@ -14,10 +13,27 @@ bucket = os.environ.get('BUCKET_NAME', "chef-roaster")
 def sign_image(key):
     url = s3.generate_presigned_url(
         'get_object',
-        Params={'Bucket': bucket, 'Key': f'team/{key}'},
+        Params={'Bucket': bucket, 'Key': key},
         ExpiresIn=3600  # URL valid for 1 hour
     )
     return url
+
+
+def list_images():
+    response = s3.list_objects_v2(Bucket=bucket, Prefix='team/')
+    images = []
+    if 'Contents' in response:
+        for item in response['Contents']:
+            if '-kid' not in item['Key']:
+                images.append(item['Key'])
+    return images
+
+
+def get_image(chef):
+    all_images = list_images()
+    for image in all_images:
+        if f'team/{chef.lower()}.' in image:
+            return image
 
 
 @app.route('/', methods=['GET'])
@@ -27,13 +43,16 @@ def home():
 
 @app.route('/bedrock', methods=['GET', 'POST'])
 def bedrock():
-    return find_chef(request.get_json())
+    return jsonify(find_chef(request.get_json()))
 
 
 @app.route('/find', methods=['POST'])
 def submit():
-    time.sleep(5)
-    return jsonify({"url": sign_image('ali.jpg')})
+    result = find_chef(request.get_json())
+    return jsonify({
+        "url": sign_image(get_image(result['name'])),
+        "reason": result['reason'].replace('"', '')
+    })
 
 
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])

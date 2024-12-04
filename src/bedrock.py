@@ -79,12 +79,12 @@ def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
 
 def find_chef(request):
     print(request) 
-    print(request['message'])
+    print(request['prompt'])
     print("###")
-    guessed_chef = guess_the_chef_name(user_message=request['message'], descriptions=DESCRIPTION)
+    guessed_chef = guess_the_chef_name(user_message=request['prompt'], descriptions=DESCRIPTION)
     print(f"## {guessed_chef}")
     guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
     print(f"### {guessed_chef}")
-    roast = get_the_roast(user_message=request['message'], chef_to_roast=guessed_chef, descriptions=DESCRIPTION)
+    roast = get_the_roast(user_message=request['prompt'], chef_to_roast=guessed_chef, descriptions=DESCRIPTION)
     print(f"$$$ {roast}")
-    return jsonify({"name": guessed_chef, "reason": guessed_chef + " : " + roast})
+    return {"name": guessed_chef, "reason": roast}
