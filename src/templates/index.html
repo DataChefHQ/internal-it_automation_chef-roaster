@@ -13,11 +13,13 @@
         <div class="container">
             <textarea id="prompt" placeholder="Describe the poor chef..." rows="4"></textarea>
             <br />
-            <button class="button" onclick="submitForm()" onmouseover="changeText(this)" onmouseout="resetText(this)">Show me the victim 👿</button>
+            <button class="button" onclick="submitForm()" onmouseover="changeText(this)" onmouseout="resetText(this)">
+                Show me the victim 👿
+            </button>
             <div id="loading">
                 <div class="spinner" id="spinner" style="display:none;"></div>
             </div>
-            <img id="image" alt="Generated Image">
+            <img id="image" alt="Chef to Roast">
         </div>
     </div>
     {% include 'footer.html' %}
