@@ -19,6 +19,7 @@ provider:
             - lambda:InvokeAsync
             - s3:*
             - dynamodb:*
+            - bedrock:*
           Resource: "*"
   runtime: python3.10
   stage: prod
