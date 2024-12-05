@@ -10,6 +10,15 @@ s3 = boto3.client('s3')
 bucket = os.environ.get('BUCKET_NAME', "chef-roaster")
 
 
+@app.after_request
+def add_cache_control(response):
+    # Disable caching for all responses
+    response.cache_control.no_store = True
+    response.expires = -1
+    response.headers['Pragma'] = 'no-cache'
+    return response
+
+
 def sign_image(key):
     url = s3.generate_presigned_url(
         'get_object',
@@ -45,9 +54,11 @@ def home():
 def bedrock():
     return jsonify(find_chef(request.get_json()))
 
+
 @app.route('/image', methods=['POST'])
 def roast_image():
     return jsonify(generate_roast_image_url(request.get_json()))
+
 
 @app.route('/find', methods=['POST'])
 def submit():
