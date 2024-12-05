@@ -16,6 +16,7 @@ MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
 DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
+CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
 
 def guess_the_chef_name(user_message: str, descriptions: str) -> str:
     """
@@ -40,7 +41,7 @@ def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> s
     """
     Get a response from the Bedrock AI model.
     """
-    prompt = f"DataChef Roasting Party! \n\nHere’s the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nDish out the funniest, most hilarious roast for {chef_to_roast}. Keep it short, FUNNY, and spicy. It doesn't need to be necessarily from their information. ONLY GIVE ME THE ROAST — nothing else!"
+    prompt = f"DataChef Roasting Party! \n\nHere’s the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nDish out the funniest, most hilarious roast for {chef_to_roast}. Keep it short, FUNNY, and spicy. It doesn't need to be necessarily from their information. ONLY GIVE ME THE ROAST, NOTHING ELSE!"
     messages = [{"role": "user", "content": [{"text": prompt}]}]
     bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
     
@@ -85,6 +86,6 @@ def find_chef(request):
         guessed_chef = check_and_handle_miss_guessed_chef("")
         print(f"#### {guessed_chef}")
 
-    roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
+    roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "reason": roast}
