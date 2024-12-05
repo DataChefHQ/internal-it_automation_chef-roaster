@@ -1,13 +1,38 @@
-from flask import jsonify
 import boto3
 import random
 from botocore.exceptions import ClientError
+import openai
+import json
 
+
+def get_openai_api_key():
+    secret_name = "OPENAI_API_KEY"
+    region_name = "us-east-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(service_name="secretsmanager", region_name=region_name)
+
+    try:
+        # Fetch the secret value
+        response = client.get_secret_value(SecretId=secret_name)
+
+        # Decrypt the secret if it is encrypted
+        if "SecretString" in response:
+            secret = response["SecretString"]
+            secret_dict = json.loads(secret)
+            return secret_dict["OPENAI_API_KEY"]
+        else:
+            raise Exception("Secret value not found.")
+    except ClientError as e:
+        raise Exception(f"Error retrieving secret: {e}")
+    
 def read_txt_file(filename: str) -> str:
     with open(filename, 'r') as file:
         content = file.read()
     return content
 
+openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
 MODEL_ID = "amazon.nova-pro-v1:0"
 TEMPERATURE = 0.7
@@ -17,6 +42,18 @@ MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
 DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
+
+def create_image(prompt: str) -> str:
+    response = openai.Image.create(
+        model="dall-e-3",
+        prompt=prompt,
+        n=1,  # Number of images to generate
+        size="1024x1024"  # Image size options: 256x256, 512x512, or 1024x1024
+    )
+
+    image_url = response['data'][0]['url']
+
+    return image_url
 
 def guess_the_chef_name(user_message: str, descriptions: str) -> str:
     """
@@ -41,7 +78,7 @@ def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> s
     """
     Get a response from the Bedrock AI model.
     """
-    prompt = f"DataChef Roasting Party! \n\nHere’s the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nDish out the funniest, most hilarious roast for {chef_to_roast}. Keep it short, FUNNY, and spicy. It doesn't need to be necessarily from their information. ONLY GIVE ME THE ROAST, NOTHING ELSE!"
+    prompt = f"DataChef Roasting Party! \n\nHere's the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nYour task: Roast {chef_to_roast}. Pick just one thing from the description to focus on, and deliver the funniest, most savage roast you can. Keep it SHORT, FUNNY, and SPICY. Do NOT try to use everything in the description—pick only ONE thing and go all in. ONLY GIVE ME THE ROAST, NOTHING ELSE!"
     messages = [{"role": "user", "content": [{"text": prompt}]}]
     bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
     
@@ -65,8 +102,6 @@ def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
         return random.choice(chefs).lower()
 
 def find_chef(request):
-    print(request) 
-    print("###")
     try:
         user_message = request['prompt']
     except KeyError:
@@ -88,4 +123,6 @@ def find_chef(request):
 
     roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
     print(f"$$$ {roast}")
-    return {"name": guessed_chef, "reason": roast}
+    roast_image_url = create_image(roast)
+
+    return {"name": guessed_chef, "reason": roast, "roast_image_url": roast_image_url}
