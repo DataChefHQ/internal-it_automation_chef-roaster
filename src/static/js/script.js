@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function submitForm() {
     // Show loading spinner and message
     document.getElementById("roast-button").style.display = 'none';
+    document.getElementById("roast-button-loading").textContent = 'Roasting... 🔥';
     document.getElementById("roast-button-loading").style.display = 'block';
 
     document.getElementById("image").style.display = 'none';
@@ -35,12 +36,11 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
-        document.getElementById("roast-button").style.display = 'block';
-        document.getElementById("roast-button-loading").style.display = 'none';
-
+        // Show the Chef image
         document.getElementById("image").src = data.url;
         document.getElementById("image").style.display = 'block';
 
+        //Start typing the response
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
@@ -49,6 +49,24 @@ function submitForm() {
         typewriter
           .typeString(data.reason)
           .start();
+
+        // Get the image describing the roast
+        document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
+        fetch('/image', {
+            method: 'POST',
+            body: JSON.stringify({ roast: data.reason }),
+            headers: { 'Content-Type': 'application/json' }
+        }).then(
+            response => response.json()
+        ).then(data => {
+            // Change the roasting button back for the next roast
+            document.getElementById("roast-button").style.display = 'block';
+            document.getElementById("roast-button-loading").style.display = 'none';
+
+            document.getElementById("image").src = data.roast_image_url;
+            document.getElementById("image").style.display = 'block';
+        });
+
     });
 }
 

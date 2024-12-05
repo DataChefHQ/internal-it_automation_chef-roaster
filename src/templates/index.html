@@ -15,12 +15,19 @@
     <div class="central">
         <h1 style="color: #F44336; font-size: xxx-large;"> 🎄 Chef Roaster 🔥 </h1>
         <div class="container">
-            <div style="display: flex; gap: 20px; justify-content: space-around; text-align: left; margin-top: 50px;">
-                <div style="flex: 1;">
-                    <span>Describe a Chef</span>
-                    <textarea id="prompt" placeholder="Leave empty for a random roast" rows="5"></textarea>
-                    <br />
-                    <div style="display: flex; justify-content: end">
+            <div style="display: flex; flex-direction: column;  margin-top: 20px;">
+
+                <div class="image-container">
+                    <img class="background-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
+                    <img class="overlay-image" id="image">
+                </div>
+                <div class="response-text" id="response">
+                </div>
+
+
+                <div class="describe">
+                    <input class="describe__input" type="text" id="prompt" placeholder="Describe a Chef, leave empty for a random roast"></input>
+                    <div class="describe__button" style="display: flex; justify-content: end">
                         <button id="roast-button" class="button" onclick="submitForm()" onmouseover="changeText(this)"
                                 onmouseout="resetText(this)">
                             Roast 👿
@@ -30,14 +37,11 @@
                         </button>
                     </div>
                 </div>
-                <div style="flex: 1;">
-                    <div class="image-container">
-                        <img class="background-image" src="{{ url_for('static', filename='images/chef_roast_placeholder.webp') }}" />
-                        <img class="overlay-image" id="image">
-                    </div>
-                    <div class="response-text" id="response">
-                    </div>
-                </div>
+
+
+
+
+
 
             </div>
 
