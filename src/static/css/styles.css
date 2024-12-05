@@ -12,6 +12,7 @@ body {
     align-items: center;
     display: flex;
     height: 95vh;
+    flex-direction: column;
 }
 
 .container {
@@ -176,6 +177,7 @@ footer a {
     pointer-events: none;
     user-select: none;
     animation: fall linear infinite;
+    z-index: -1;
 }
 
 @keyframes fall {
