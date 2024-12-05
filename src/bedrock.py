@@ -75,10 +75,16 @@ def find_chef(request):
     if user_message == "":
         user_message = "No Description Available!"
 
-    guessed_chef = guess_the_chef_name(user_message=user_message, descriptions=DESCRIPTIONS)
-    print(f"## {guessed_chef}")
-    guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
-    print(f"### {guessed_chef}")
+    if user_message != "No Description Available!":
+        guessed_chef = guess_the_chef_name(user_message=user_message, descriptions=DESCRIPTIONS)
+        print(f"## {guessed_chef}")
+        guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
+        print(f"### {guessed_chef}")
+    else:
+        # choose randomly
+        guessed_chef = check_and_handle_miss_guessed_chef("")
+        print(f"#### {guessed_chef}")
+
     roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=DESCRIPTIONS)
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "reason": roast}
