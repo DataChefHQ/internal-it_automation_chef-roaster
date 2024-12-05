@@ -22,14 +22,14 @@ body {
     padding: 30px;
     margin: 30px;
     text-align: center;
-    max-width: 1000px;
+    max-width: 900px;
     width: 100%;
-    min-height: 600px;
+    min-height: 550px;
 }
 
 h1 {
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     font-size: 2rem;
 }
 
@@ -83,7 +83,7 @@ textarea {
 }
 
 .response-image {
-    margin: 25px auto 0 auto;
+    margin: 15px auto 0 auto;
     max-width: 100%;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.75);
@@ -91,13 +91,14 @@ textarea {
 }
 
 .image-container {
-    margin-top: 23px;
+    margin-top: 0;
     position: relative;
     width: 300px;
     height: 300px;
     margin-left: auto;
     margin-right: auto;
 }
+
 .background-image {
   width: 100%;
   height: 100%;
@@ -105,6 +106,7 @@ textarea {
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.75);
 }
+
 .overlay-image {
   display: none;
   position: absolute;
@@ -191,8 +193,8 @@ footer a {
 }
 
 .response-text {
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: 10px;
+    padding: 15px;
     font-size: 1.1rem;
     margin-left: auto;
     margin-right: auto;
