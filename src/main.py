@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
-from .bedrock import find_chef
+from .bedrock import find_chef, generate_roast_image_url
 
 app = Flask(__name__)
 s3 = boto3.client('s3')
@@ -45,6 +45,9 @@ def home():
 def bedrock():
     return jsonify(find_chef(request.get_json()))
 
+@app.route('/image', methods=['POST'])
+def roast_image():
+    return jsonify(generate_roast_image_url(request.get_json()))
 
 @app.route('/find', methods=['POST'])
 def submit():

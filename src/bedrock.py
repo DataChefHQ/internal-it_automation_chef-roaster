@@ -123,6 +123,13 @@ def find_chef(request):
 
     roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
     print(f"$$$ {roast}")
+
+    return {"name": guessed_chef, "reason": roast}
+
+
+def generate_roast_image_url(request):
+    print("!!", request)
+    roast = request['roast']
     roast_image_url = create_image(roast)
 
-    return {"name": guessed_chef, "reason": roast, "roast_image_url": roast_image_url}
+    return {"roast_image_url": roast_image_url}
