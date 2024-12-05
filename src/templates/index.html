@@ -8,19 +8,43 @@
     <link rel="icon" type="image/png" href="https://chef-roaster.s3.eu-west-1.amazonaws.com/favicon.png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 </head>
 <body>
     <div class="central">
         <div class="container">
-            <textarea id="prompt" placeholder="Describe the poor chef..." rows="5"></textarea>
-            <br />
-            <button class="button" onclick="submitForm()" onmouseover="changeText(this)" onmouseout="resetText(this)">
-                Show me the victim 👿
-            </button>
+            <h1 style="color: #F44336;"> 🎄 Chef Roaster 🔥 </h1>
+            <div style="display: flex; gap: 20px; justify-content: space-around; text-align: left; margin-top: 50px;">
+                <div style="flex: 1;">
+                    <span>Describe a Chef</span>
+                    <textarea id="prompt" placeholder="Leave empty for a random roast" rows="5"></textarea>
+                    <br />
+                    <div style="display: flex; justify-content: end">
+                        <button id="roast-button" class="button" onclick="submitForm()" onmouseover="changeText(this)"
+                                onmouseout="resetText(this)">
+                            Roast 👿
+                        </button>
+                        <button id="roast-button-loading" class="button button-roasting" disabled>
+                            Roasting... 🔥
+                        </button>
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <div class="image-container">
+                        <img class="background-image" src="{{ url_for('static', filename='images/chef_roast_placeholder.webp') }}" />
+                        <img class="overlay-image" id="image">
+                    </div>
+                    <div class="response-text" id="response">
+                    </div>
+                </div>
+
+            </div>
+
+
             <div id="loading">
                 <div class="spinner" id="spinner" style="display:none;"></div>
             </div>
-            <img id="image" alt="Chef to Roast" style="height: 400px;">
+
         </div>
     </div>
     {% include 'footer.html' %}
