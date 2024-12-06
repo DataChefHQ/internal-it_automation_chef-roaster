@@ -43,22 +43,22 @@ MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
 CHEFS_MAP = {
-    "Ali": "[Male Name]", 
-    "Andrea": "[Male Name]", 
-    "Anne": "[Female Name]", 
-    "Ashkan": "[Male Name]", 
-    "Bram": "[Male Name]", 
-    "Davide": "[Male Name]", 
-    "Farbod": "[Male Name]", 
-    "Federico": "[Male Name]", 
-    "Jane": "[Female Name]", 
-    "Kiarash": "[Male Name]", 
-    "Mahdokht": "Female", 
-    "Melvyn": "[Male Name]", 
-    "Pejman": "[Male Name]", 
-    "Rehan": "[Male Name]", 
-    "Shahin": "[Male Name]", 
-    "Soheil": "[Male Name]"
+    "ali": "[Male Name]", 
+    "andrea": "[Male Name]", 
+    "anne": "[Female Name]", 
+    "ashkan": "[Male Name]", 
+    "bram": "[Male Name]", 
+    "davide": "[Male Name]", 
+    "farbod": "[Male Name]", 
+    "federico": "[Male Name]", 
+    "jane": "[Female Name]", 
+    "kiarash": "[Male Name]", 
+    "mahdokht": "Female", 
+    "melvyn": "[Male Name]", 
+    "pejman": "[Male Name]", 
+    "rehan": "[Male Name]", 
+    "shahin": "[Male Name]", 
+    "soheil": "[Male Name]"
 }
 DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
@@ -227,11 +227,13 @@ def find_chef(request):
 
 
 def remove_chef_name_from_roast(roast: str, chefs: list, chefs_map=CHEFS_MAP):
+    roast = roast.lower()
     # Loop through each chef's name in the list and remove it from the roast
     for chef in chefs:
+        chef = chef.lower()
         try:
             roast = roast.replace(chef, chefs_map[chef])
-        except:
+        except KeyError:
             print(f"{chef} name not found")
             pass
     # Return the modified roast string
