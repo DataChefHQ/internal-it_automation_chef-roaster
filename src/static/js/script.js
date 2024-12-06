@@ -21,6 +21,7 @@ function submitForm() {
     document.getElementById("roast-button-loading").style.display = 'block';
     document.getElementById("image-chef").style.display = 'none';
     document.getElementById("image-roast").style.display = 'none';
+    document.getElementById("image-hat").style.display = 'none';
     document.getElementById("bg-image").style.display = 'block';
     document.getElementById("response").innerText = "";
 
@@ -35,6 +36,7 @@ function submitForm() {
     ).then(data => {
         // Show the Chef image
         document.getElementById("image-chef").src = data.url;
+        document.getElementById("image-hat").src = data.hat;
         document.getElementById("image-chef").style.display = 'block';
         document.getElementById("bg-image").style.display = 'none';
 
@@ -62,7 +64,9 @@ function submitForm() {
             document.getElementById("roast-button").style.display = 'block';
             document.getElementById("roast-button-loading").style.display = 'none';
             document.getElementById("image-roast").src = data.roast_image_url;
+            document.getElementById("image-chef").style.display = 'none';
             document.getElementById("image-roast").style.display = 'block';
+            document.getElementById("image-hat").style.display = 'block';
         });
 
     });

@@ -40,9 +40,14 @@ def list_images():
 
 def get_image(chef):
     all_images = list_images()
+    real = None
+    hat = None
     for image in all_images:
         if f'team/{chef.lower()}.' in image:
-            return image
+            real = image
+        if f'team/{chef.lower()}-hat.' in image:
+            hat = image
+    return real, hat
 
 
 @app.route('/', methods=['GET'])
@@ -63,8 +68,10 @@ def roast_image():
 @app.route('/find', methods=['POST'])
 def submit():
     result = find_chef(request.get_json())
+    real_image, image_with_hat = get_image(result['name'])
     return jsonify({
-        "url": sign_image(get_image(result['name'])),
+        "url": sign_image(real_image),
+        "hat": sign_image(image_with_hat),
         "reason": result['reason'].replace('"', '')
     })
 

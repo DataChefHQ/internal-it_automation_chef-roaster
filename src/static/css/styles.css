@@ -175,6 +175,7 @@ footer a {
     display: flex;
     gap: 20px;
     margin-top: auto;
+    margin-bottom: 10px;
 }
 .describe__input {
     width: 100%;
