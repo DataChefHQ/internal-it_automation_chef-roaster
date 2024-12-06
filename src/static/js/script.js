@@ -34,10 +34,6 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
-        // Show the Chef image
-        document.getElementById("image-chef").src = data.hat; // both images should have hat!
-        document.getElementById("image-hat").src = data.hat;
-
         //Start typing the response
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
@@ -51,18 +47,29 @@ function submitForm() {
 
         // Get the image describing the roast
         setTimeout(function() {
-            document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
-            document.getElementById("image-chef").style.display = 'block';
-            document.getElementById("bg-image").style.display = 'none';
-            var typewriter = new Typewriter(resp, {
-                loop: false,
-                delay: 25,
-                cursor: '|',
-            });
-            typewriter
-              .typeString(data.roast)
-              .start();
-        }, 6000);
+            fetch('/roast', {
+                method: 'POST',
+                body: JSON.stringify({ prompt: prompt, chef: data.name }),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(
+                response => response.json()
+            ).then(data => {
+                // Show the Chef image
+                document.getElementById("image-chef").src = data.hat; // both images should have hat!
+                document.getElementById("image-hat").src = data.hat;
+                document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
+                document.getElementById("image-chef").style.display = 'block';
+                document.getElementById("bg-image").style.display = 'none';
+                var typewriter = new Typewriter(resp, {
+                    loop: false,
+                    delay: 25,
+                    cursor: '|',
+                });
+                typewriter
+                    .typeString(data.roast)
+                    .start();
+            })
+        }, 3000);
 
         fetch('/image', {
             method: 'POST',

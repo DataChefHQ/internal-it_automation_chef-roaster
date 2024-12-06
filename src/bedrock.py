@@ -215,15 +215,16 @@ def openai_get_reasoning(user_message: str, descriptions: str, chef: str, random
         f"User input: {user_message}\n"
         f"Based on the user input and the descriptions of chefs we have guessed the user input is referring to {chef}\n"
         f"These are some details about {chef}: {chef_description}\n"
-        f"Now you have to generate some reasoning step that why we chose {chef}. The reasoning should be logical but"
-        "SHOULD NOT directly mention the chef, we want to make it engaging\nMake sure to keep it VERY VERY SHORT\n"
+        f"Now you have to generate some reasoning step that why we chose {chef}. The reasoning should be logical and "
+        f"related to user input but SHOULD NOT directly mention the chef, we want to make it engaging\n"
+        f"Make sure to keep it VERY VERY SHORT and do NOT mention {chef} in it!"
     )
     if random:
         prompt += ("Start with 'Lets roast some chef with ... characteristics' like: let's roast a boy in tech world,"
-                   " or let's roast a girl in dutch culture ...\nGive a VERY SHORT result with just a few words")
+                   " or let's roast a girl in dutch culture ...\nGive a VERY VERY SHORT result with just a few words")
     else:
         prompt += ("Start with 'I think' like: I think it should be a boy in tech, "
-                   "or I think it's a girl with dutch culture ...")
+                   "or I think it's a girl with dutch culture ...\nGive a SHORT result with a few words")
 
     try:
         response = openai.ChatCompletion.create(
@@ -275,10 +276,18 @@ def find_chef(request):
             user_message=user_message, descriptions=DESCRIPTIONS, chef=guessed_chef, random=True
         )
 
-    roast = openai_get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
-    print(f"$$$ {roast}")
+    return {"name": guessed_chef, "reason": reason}
 
-    return {"name": guessed_chef, "reason": reason, "roast": roast}
+
+def roast_chef(request):
+    user_message = request['prompt']
+    guessed_chef = request['chef']
+
+    roast = openai_get_the_roast(
+        user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef]
+    )
+    print(f"$$$ {roast}")
+    return {"name": guessed_chef, "roast": roast}
 
 
 def remove_chef_name_from_roast(roast: str, chefs: list, chefs_map=CHEFS_MAP):
@@ -305,5 +314,5 @@ def generate_roast_image_url(request):
 
 
 if __name__ == "__main__":
-    res = openai_get_reasoning("coffee adict", DESCRIPTIONS, "Jane", random=True)
+    res = openai_get_reasoning("CEO", DESCRIPTIONS, "Ashkan", random=True)
     print(res)
