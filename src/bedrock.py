@@ -3,6 +3,7 @@ import random
 from botocore.exceptions import ClientError
 import openai
 import json
+from typing import Optional
 
 
 def get_openai_api_key():
@@ -35,8 +36,9 @@ def read_txt_file(filename: str) -> str:
 openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
 MODEL_ID = "amazon.nova-pro-v1:0" # anthropic.claude-3-sonnet-20240229-v1:0 anthropic.claude-3-5-sonnet-20240620-v1:0 anthropic.claude-3-5-sonnet-20241022-v2:0
-TEMPERATURE = 0.8
-TOP_P = 0.8
+OPENAI_MODEL_NAME = "gpt-4o"
+TEMPERATURE = 0.85
+TOP_P = 0.75
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
@@ -93,6 +95,85 @@ def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> s
     except ClientError as e:
         return f"Error communicating with Bedrock: {str(e)}"
 
+def openai_guess_the_chef_name(user_message: str, descriptions: str) -> str:
+    """
+    Uses OpenAI's API to guess the chef's name based on user input and descriptions.
+
+    Args:
+        user_message (str): The user's input message.
+        descriptions (str): Descriptions of the persons.
+
+    Returns:
+        str: The guessed chef's name or an error message.
+    """
+    prompt = (
+        f"Persons Descriptions:\n{descriptions}\n"
+        f"User input: {user_message}\n"
+        "Based on the user input and the descriptions of the persons above, "
+        "guess who the input is about. NO MATTER WHAT, ONLY output their name without anything before or after it."
+    )
+
+    messages = [
+        {"role": "user", "content": prompt}
+    ]
+
+    try:
+        response = openai.ChatCompletion.create(
+            model=OPENAI_MODEL_NAME,
+            messages=messages,
+            temperature=TEMPERATURE,
+            top_p=TOP_P,
+            max_tokens=MAX_LEN,
+            n=1,  # Number of responses to generate
+            stop=None  # Define stop sequences if needed
+        )
+        # Extract and clean the response text
+        response_text = response.choices[0].message.content.strip()
+        return response_text
+    except openai.error.OpenAIError as e:
+        return f"Error communicating with OpenAI: {str(e)}"
+
+def openai_get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> str:
+    """
+    Uses OpenAI's API to generate a roast for the specified chef.
+
+    Args:
+        user_message (str): The user's input message.
+        chef_to_roast (str): The name of the chef to roast.
+        descriptions (str): Descriptions of the chef.
+
+    Returns:
+        str: The generated roast or an error message.
+    """
+    prompt = (
+        f"DataChef Roasting Party!\n\n"
+        f"Here's the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\n"
+        f"Your task: Roast {chef_to_roast}. Pick just one thing from the description to focus on, "
+        "and deliver the funniest, most savage roast you can. Keep it FUNNY, and SPICY. "
+        "Do NOT try to use everything in the description—pick only ONE thing and go all in. "
+        "ONLY GIVE ME THE ROAST, NOTHING ELSE!"
+    )
+
+    messages = [
+        {"role": "user", "content": prompt}
+    ]
+
+    try:
+        response = openai.ChatCompletion.create(
+            model=OPENAI_MODEL_NAME,
+            messages=messages,
+            temperature=TEMPERATURE,
+            top_p=TOP_P,
+            max_tokens=MAX_LEN,
+            n=1,  # Number of responses to generate
+            stop=None  # Define stop sequences if needed
+        )
+        # Extract and clean the response text
+        response_text = response.choices[0].message.content.strip()
+        return response_text
+    except openai.error.OpenAIError as e:
+        return f"Error communicating with OpenAI: {str(e)}"
+    
 def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
     lower_chefs = [i.lower() for i in chefs]
     if guessed_chef.lower() in lower_chefs:
@@ -112,7 +193,7 @@ def find_chef(request):
         user_message = "No Description Available!"
 
     if user_message != "No Description Available!":
-        guessed_chef = guess_the_chef_name(user_message=user_message, descriptions=DESCRIPTIONS)
+        guessed_chef = openai_guess_the_chef_name(user_message=user_message, descriptions=DESCRIPTIONS)
         print(f"## {guessed_chef}")
         guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
         print(f"### {guessed_chef}")
@@ -121,7 +202,7 @@ def find_chef(request):
         guessed_chef = check_and_handle_miss_guessed_chef("")
         print(f"#### {guessed_chef}")
 
-    roast = get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
+    roast = openai_get_the_roast(user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef])
     print(f"$$$ {roast}")
 
     return {"name": guessed_chef, "reason": roast}
