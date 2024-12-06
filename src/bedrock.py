@@ -38,7 +38,6 @@ REGION = "us-east-1"
 MODEL_ID = "amazon.nova-pro-v1:0" # anthropic.claude-3-sonnet-20240229-v1:0 anthropic.claude-3-5-sonnet-20240620-v1:0 anthropic.claude-3-5-sonnet-20241022-v2:0
 OPENAI_MODEL_NAME = "gpt-4o"
 TEMPERATURE = 0.85
-TOP_P = 0.75
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
@@ -69,7 +68,7 @@ def guess_the_chef_name(user_message: str, descriptions: str) -> str:
         response = bedrock_runtime.converse(
             modelId=MODEL_ID,
             messages=messages,
-            inferenceConfig={"temperature": TEMPERATURE, "topP": TOP_P, "maxTokens": MAX_LEN}
+            inferenceConfig={"temperature": TEMPERATURE, "maxTokens": MAX_LEN}
         )
         response_text = response["output"]["message"]["content"][0]["text"]
         return response_text
@@ -88,7 +87,7 @@ def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> s
         response = bedrock_runtime.converse(
             modelId=MODEL_ID,
             messages=messages,
-            inferenceConfig={"temperature": TEMPERATURE, "topP": TOP_P, "maxTokens": MAX_LEN}
+            inferenceConfig={"temperature": TEMPERATURE, "maxTokens": MAX_LEN}
         )
         response_text = response["output"]["message"]["content"][0]["text"]
         return response_text
@@ -122,7 +121,6 @@ def openai_guess_the_chef_name(user_message: str, descriptions: str) -> str:
             model=OPENAI_MODEL_NAME,
             messages=messages,
             temperature=TEMPERATURE,
-            top_p=TOP_P,
             max_tokens=MAX_LEN,
             n=1,  # Number of responses to generate
             stop=None  # Define stop sequences if needed
@@ -150,7 +148,7 @@ def openai_get_the_roast(user_message: str, chef_to_roast: str, descriptions: st
         f"Here's the next person: {chef_to_roast}. The input message: {user_message}. Some information about them:\n{descriptions}\n\n"
         f"Your task: Roast {chef_to_roast}. RANDOMLY Pick just one thing from the description to focus on, "
         "and deliver the FUNNIEST, most savage roast you can. Keep it FUNNY, and SPICY. Avoid Politics. "
-        "DO NOT try to use everything in the description, PICK ONLY ONE thing and go all in. "
+        "DO NOT try to use everything in the description, keep to one paragraph (2 sentences max), PICK ONLY ONE thing and go all in. "
         "ONLY GIVE ME THE ROAST, NOTHING ELSE!"
     )
 
@@ -163,7 +161,6 @@ def openai_get_the_roast(user_message: str, chef_to_roast: str, descriptions: st
             model=OPENAI_MODEL_NAME,
             messages=messages,
             temperature=TEMPERATURE,
-            top_p=TOP_P,
             max_tokens=MAX_LEN,
             n=1,  # Number of responses to generate
             stop=None  # Define stop sequences if needed
