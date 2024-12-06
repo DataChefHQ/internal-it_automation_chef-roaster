@@ -16,14 +16,13 @@
         <h1 style="color: #F44336; font-size: xxx-large;"> 🎄 Chef Roaster 🔥 </h1>
         <div class="container">
             <div style="display: flex; flex-direction: column;  margin-top: 20px;">
-
-                <div class="image-container">
-                    <img class="background-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
-                    <img class="overlay-image" id="image">
+                <div style="min-height: 500px;">
+                    <div class="image-container">
+                        <img class="background-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
+                        <img class="overlay-image" id="image">
+                    </div>
+                    <div class="response-text" id="response"></div>
                 </div>
-                <div class="response-text" id="response">
-                </div>
-
 
                 <div class="describe">
                     <input class="describe__input" type="text" id="prompt" placeholder="Describe a Chef, leave empty for a random roast"></input>
@@ -37,14 +36,7 @@
                         </button>
                     </div>
                 </div>
-
-
-
-
-
-
             </div>
-
 
             <div id="loading">
                 <div class="spinner" id="spinner" style="display:none;"></div>

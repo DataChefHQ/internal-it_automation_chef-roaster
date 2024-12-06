@@ -24,7 +24,7 @@ body {
     text-align: center;
     max-width: 900px;
     width: 100%;
-    min-height: 550px;
+    min-height: 555px;
 }
 
 h1 {
@@ -32,33 +32,6 @@ h1 {
     margin-bottom: 0;
     font-size: 2rem;
 }
-
-.button {
-    background-color: #1A237E;
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    font-family: 'Poppins';
-    width: 300px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.button:hover {
-    background-color: #F44336;
-}
-
-.button-roasting {
-    background-color: rgb(191, 51, 41);
-    display: none;
-    cursor: not-allowed;
-}
-.button-roasting:hover {
-    background-color: rgb(191, 51, 41);
-}
-
 
 textarea {
     width: 100%;
@@ -203,6 +176,7 @@ footer a {
 }
 
 .describe {
+    height: 55px;
     display: flex;
     gap: 20px;
     margin-top: auto;
@@ -210,6 +184,32 @@ footer a {
 .describe__input {
     width: 100%;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 15px;
     font-size: 1.1rem;
+}
+
+.button {
+    background-color: #1A237E;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    width: 250px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #F44336;
+}
+
+.button-roasting {
+    background-color: rgb(191, 51, 41);
+    display: none;
+    cursor: not-allowed;
+}
+.button-roasting:hover {
+    background-color: rgb(191, 51, 41);
 }

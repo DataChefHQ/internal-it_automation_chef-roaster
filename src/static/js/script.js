@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resp = document.getElementById("response");
     typewriter = new Typewriter(resp, {
         loop: false,
-        delay: 45,
+        delay: 30,
         cursor: '|',
     });
     typewriter
@@ -45,7 +45,7 @@ function submitForm() {
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
-            delay: 90,
+            delay: 45,
             cursor: '|',
         });
         typewriter
