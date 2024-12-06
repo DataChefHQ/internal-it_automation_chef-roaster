@@ -35,7 +35,7 @@ function submitForm() {
         response => response.json()
     ).then(data => {
         // Show the Chef image
-        document.getElementById("image-chef").src = data.url;
+        document.getElementById("image-chef").src = data.hat; // both images should have hat!
         document.getElementById("image-hat").src = data.hat;
         document.getElementById("image-chef").style.display = 'block';
         document.getElementById("bg-image").style.display = 'none';
