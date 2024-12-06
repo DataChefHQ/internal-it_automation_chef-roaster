@@ -148,7 +148,7 @@ def openai_get_the_roast(user_message: str, chef_to_roast: str, descriptions: st
     prompt = (
         f"DataChef Roasting Party!\n\n"
         f"Here's the next person: {chef_to_roast}. The input message: {user_message}. Some information about them:\n{descriptions}\n\n"
-        f"Your task: Roast {chef_to_roast}. Pick just one thing from the description to focus on, "
+        f"Your task: Roast {chef_to_roast}. RANDOMLY Pick just one thing from the description to focus on, "
         "and deliver the FUNNIEST, most savage roast you can. Keep it FUNNY, and SPICY. Avoid Politics. "
         "DO NOT try to use everything in the description, PICK ONLY ONE thing and go all in. "
         "ONLY GIVE ME THE ROAST, NOTHING ELSE!"
