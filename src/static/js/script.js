@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resp = document.getElementById("response");
     typewriter = new Typewriter(resp, {
         loop: false,
-        delay: 30,
+        delay: 25,
         cursor: '|',
     });
     typewriter
@@ -34,17 +34,11 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
-        // Show the Chef image
-        document.getElementById("image-chef").src = data.hat; // both images should have hat!
-        document.getElementById("image-hat").src = data.hat;
-        document.getElementById("image-chef").style.display = 'block';
-        document.getElementById("bg-image").style.display = 'none';
-
         //Start typing the response
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
-            delay: 30,
+            delay: 25,
             cursor: '|',
         });
         typewriter
@@ -52,7 +46,31 @@ function submitForm() {
           .start();
 
         // Get the image describing the roast
-        document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
+        setTimeout(function() {
+            fetch('/roast', {
+                method: 'POST',
+                body: JSON.stringify({ prompt: prompt, chef: data.name }),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(
+                response => response.json()
+            ).then(data => {
+                // Show the Chef image
+                document.getElementById("image-chef").src = data.hat; // both images should have hat!
+                document.getElementById("image-hat").src = data.hat;
+                document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
+                document.getElementById("image-chef").style.display = 'block';
+                document.getElementById("bg-image").style.display = 'none';
+                var typewriter = new Typewriter(resp, {
+                    loop: false,
+                    delay: 25,
+                    cursor: '|',
+                });
+                typewriter
+                    .typeString(data.roast)
+                    .start();
+            })
+        }, 3000);
+
         fetch('/image', {
             method: 'POST',
             body: JSON.stringify({ roast: data.reason }),
