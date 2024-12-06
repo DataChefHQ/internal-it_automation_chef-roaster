@@ -72,7 +72,8 @@ def submit():
     return jsonify({
         "url": sign_image(real_image),
         "hat": sign_image(image_with_hat),
-        "reason": result['reason'].replace('"', '')
+        "reason": result['reason'],
+        "roast": result['roast'].replace('"', '')
     })
 
 
