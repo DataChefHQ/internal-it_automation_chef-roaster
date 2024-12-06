@@ -34,9 +34,9 @@ def read_txt_file(filename: str) -> str:
 
 openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
-MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0" # amazon.nova-pro-v1:0 anthropic.claude-3-sonnet-20240229-v1:0 anthropic.claude-3-5-sonnet-20240620-v1:0 anthropic.claude-3-5-sonnet-20241022-v2:0
+MODEL_ID = "amazon.nova-pro-v1:0" # anthropic.claude-3-sonnet-20240229-v1:0 anthropic.claude-3-5-sonnet-20240620-v1:0 anthropic.claude-3-5-sonnet-20241022-v2:0
 TEMPERATURE = 0.8
-TOP_P = 0.9
+TOP_P = 0.8
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
