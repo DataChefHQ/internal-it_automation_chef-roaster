@@ -208,9 +208,18 @@ def find_chef(request):
     return {"name": guessed_chef, "reason": roast}
 
 
+def remove_chef_name_from_roast(roast: str, chefs: list):
+    # Loop through each chef's name in the list and remove it from the roast
+    for chef in chefs:
+        roast = roast.replace(chef, "")
+    # Return the modified roast string
+    return roast.strip()
+
 def generate_roast_image_url(request):
     print("!!", request)
     roast = request['roast']
+    roast = remove_chef_name_from_roast(roast=roast, chefs=CHEFS)
+    
     roast_image_url = create_image(roast)
 
     return {"roast_image_url": roast_image_url}
