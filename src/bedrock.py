@@ -40,10 +40,9 @@ TEMPERATURE = 0.85
 TOP_P = 0.75
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
-CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
+CHEFS = ["Ali", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
 CHEFS_MAP = {
     "ali": "boy", 
-    "andrea": "boy", 
     "anne": "girl", 
     "ashkan": "boy", 
     "bram": "boy", 
