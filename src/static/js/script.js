@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function submitForm() {
     // Show loading spinner and message
+    document.getElementById("image-chef").src = "";
+    document.getElementById("image-roast").src = "";
+    document.getElementById("image-hat").src = "";
     document.getElementById("roast-button").style.display = 'none';
     document.getElementById("roast-button-loading").textContent = 'Roasting... 🔥';
     document.getElementById("roast-button-loading").style.display = 'block';
