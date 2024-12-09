@@ -72,6 +72,7 @@ def create_image(prompt: str) -> str:
     )
 
     image_url = response['data'][0]['url']
+    print(f"Created Image with #{prompt}# with URL: {image_url}!")
 
     return image_url
 
