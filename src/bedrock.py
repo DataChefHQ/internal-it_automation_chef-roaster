@@ -3,8 +3,7 @@ import random
 from botocore.exceptions import ClientError
 import openai
 import json
-from typing import Optional
-
+import re
 
 def get_openai_api_key():
     secret_name = "OPENAI_API_KEY"
@@ -43,22 +42,22 @@ MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Andrea", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
 CHEFS_MAP = {
-    "ali": "[Male Name]", 
-    "andrea": "[Male Name]", 
-    "anne": "[Female Name]", 
-    "ashkan": "[Male Name]", 
-    "bram": "[Male Name]", 
-    "davide": "[Male Name]", 
-    "farbod": "[Male Name]", 
-    "federico": "[Male Name]", 
-    "jane": "[Female Name]", 
-    "kiarash": "[Male Name]", 
-    "mahdokht": "[Female Name]",
-    "melvyn": "[Male Name]", 
-    "pejman": "[Male Name]", 
-    "rehan": "[Male Name]", 
-    "shahin": "[Male Name]", 
-    "soheil": "[Male Name]"
+    "ali": "boy", 
+    "andrea": "boy", 
+    "anne": "girl", 
+    "ashkan": "boy", 
+    "bram": "boy", 
+    "davide": "boy", 
+    "farbod": "boy", 
+    "federico": "boy", 
+    "jane": "girl", 
+    "kiarash": "boy", 
+    "mahdokht": "girl",
+    "melvyn": "boy", 
+    "pejman": "boy", 
+    "rehan": "boy", 
+    "shahin": "boy", 
+    "soheil": "boy"
 }
 DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
@@ -218,7 +217,8 @@ def openai_get_reasoning(user_message: str, descriptions: str, chef: str, random
         f"These are some details about {chef}: {chef_description}\n"
         f"Now you have to generate some reasoning step that why we chose {chef}. The reasoning should be logical and "
         f"related to user input but SHOULD NOT directly mention the chef, we want to make it engaging\n"
-        f"Make sure to keep it VERY VERY SHORT and do NOT mention {chef} in it!"
+        f"Make sure to keep it VERY VERY SHORT and do NOT mention {chef} in it or their country name or city name!"
+        f"Use this mapping to add if their boy or girl {CHEFS_MAP}."
     )
     if random:
         prompt += ("Start with 'Lets roast some chef with ... characteristics' like: let's roast a boy in tech world,"
@@ -297,7 +297,8 @@ def remove_chef_name_from_roast(roast: str, chefs: list, chefs_map=CHEFS_MAP):
     for chef in chefs:
         chef = chef.lower()
         try:
-            roast = roast.replace(chef, chefs_map[chef])
+            # Use regex to replace exact matches only
+            roast = re.sub(rf'\b{re.escape(chef)}\b', chefs_map[chef], roast)
         except KeyError:
             print(f"{chef} name not found")
             pass
