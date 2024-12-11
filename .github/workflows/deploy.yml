@@ -10,7 +10,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
@@ -25,10 +25,10 @@ jobs:
           role-to-assume: arn:aws:iam::640721796322:role/GithubCIRole
           aws-region: eu-west-1
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js v18.20.5
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.20.5
 
       - run: npm ci
 
