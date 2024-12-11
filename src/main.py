@@ -75,8 +75,7 @@ def roast():
     result = roast_chef(request.get_json())
     real_image, image_with_hat = get_image(result['name'])
     return jsonify({
-        "url": sign_image(real_image),
-        "hat": sign_image(image_with_hat),
+        "url": sign_image(image_with_hat),
         "roast": result['roast'].replace('"', '')
     })
 
