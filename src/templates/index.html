@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Chef Roaster</title>
+    <link rel="icon" type="image/png" href="https://chef-roaster.s3.eu-west-1.amazonaws.com/favicon.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef Roaster</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="https://chef-roaster.s3.eu-west-1.amazonaws.com/favicon.png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
+    {% include 'header.html' %}
 
     <div class="central">
-        <h1 style="color: #F44336; font-size: xxx-large;"> 🎄 Chef Roaster 🔥 </h1>
+        <h1 class="heading-text"> 🎄 Chef Roaster 🔥</h1>
+
         <div class="container">
             <div style="min-height: 540px;">
                 <div class="image-container">
                     <img class="background-image" id="bg-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
                     <img class="overlay-image" id="image-chef">
-                    <img class="overlay-image" id="image-hat">
                     <img class="overlay-image" id="image-roast">
                 </div>
                 <div class="response-text" id="response"></div>
@@ -41,9 +43,9 @@
             <div id="loading">
                 <div class="spinner" id="spinner" style="display:none;"></div>
             </div>
-
         </div>
     </div>
+
     {% include 'footer.html' %}
 </body>
 </html>
