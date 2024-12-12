@@ -3,8 +3,7 @@ import random
 import uuid
 from typing import Dict, Any
 import openai
-from .utils import get_openai_api_key, read_txt_file, text_to_speech_s3
-
+from .utils import get_openai_api_key, read_txt_file, text_to_speech_s3, save_json_to_s3
 
 openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
@@ -237,12 +236,14 @@ def roast_chef(request: Dict[str, str]) -> Dict[str, str]:
         user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef]
     )
     print(f"$$$ {roast}")
-    
-    s3_key = f"audio/{uuid.uuid4().hex}.mp3"
-    roast_audio_s3_url = text_to_speech_s3(roast, ROAST_S3_BUCKET, s3_key, expiration=604800)
+    roast_id =uuid.uuid4().hex
+
+    roast_audio_s3_url = text_to_speech_s3(roast, ROAST_S3_BUCKET, f"audio/{roast_id}.mp3", expiration=604800)
     print(f"%%% {roast_audio_s3_url}")
 
-    return {"name": guessed_chef, "roast": roast, "roast_audio_s3_url": roast_audio_s3_url}
+    result = {"name": guessed_chef, "roast": roast, "roast_audio_s3_url": roast_audio_s3_url, "roast_id": roast_id}
+    save_json_to_s3(ROAST_S3_BUCKET, f"audio/{roast_id}.json", result)
+    return result
 
 def generate_roast_image_url(request: Dict[str, str]) -> Dict[str, str]:
     """

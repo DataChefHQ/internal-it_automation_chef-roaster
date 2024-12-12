@@ -2,6 +2,8 @@ import json
 import boto3
 from botocore.exceptions import ClientError
 
+s3_client = boto3.client('s3', region_name="us-east-1")
+
 
 def get_openai_api_key():
     secret_name = "OPENAI_API_KEY"
@@ -66,9 +68,6 @@ def upload_to_s3_and_get_presigned_url(audio_stream, s3_bucket, s3_key, expirati
     :param expiration: Time in seconds for the pre-signed URL to remain valid.
     :return: A pre-signed URL for the uploaded file.
     """
-    # Initialize S3 client
-    s3_client = boto3.client('s3', region_name="us-east-1")
-
     try:
         # Upload audio stream directly to S3
         s3_client.put_object(
@@ -111,3 +110,28 @@ def text_to_speech_s3(text, s3_bucket, s3_key, voice_id="Matthew", language_code
         print(f"An error occurred: {e}")
         raise
 
+
+def save_json_to_s3(bucket_name, object_key, data):
+    """
+    Save JSON data to an S3 bucket.
+
+    :param bucket_name: Name of the S3 bucket
+    :param object_key: S3 object key (path/filename in the bucket)
+    :param data: Python dictionary to save as JSON
+    """
+    json_data = json.dumps(data)  # Serialize data to JSON
+    s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=json_data)
+    print(f"Data successfully saved to s3://{bucket_name}/{object_key}")
+
+
+def load_json_from_s3(bucket_name, object_key):
+    """
+    Load JSON data from an S3 bucket.
+
+    :param bucket_name: Name of the S3 bucket
+    :param object_key: S3 object key (path/filename in the bucket)
+    :return: Python dictionary with the JSON data
+    """
+    response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+    json_data = response['Body'].read().decode('utf-8')  # Read and decode the body
+    return json.loads(json_data)  # Parse JSON into a dictionary
