@@ -40,23 +40,6 @@ TOP_P = 0.75
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = ["Ali", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
-CHEFS_MAP = {
-    "ali": "boy", 
-    "anne": "girl", 
-    "ashkan": "boy", 
-    "bram": "boy", 
-    "davide": "boy", 
-    "farbod": "boy", 
-    "federico": "boy", 
-    "jane": "girl", 
-    "kiarash": "boy", 
-    "mahdokht": "girl",
-    "melvyn": "boy", 
-    "pejman": "boy", 
-    "rehan": "boy", 
-    "shahin": "boy", 
-    "soheil": "boy"
-}
 DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
 
@@ -177,8 +160,7 @@ def openai_get_reasoning(user_message: str, descriptions: str, chef: str, random
         f"These are some details about {chef}: {chef_description}\n"
         f"Now you have to generate some reasoning step that why we chose {chef}. The reasoning should be logical and "
         f"related to user input but SHOULD NOT directly mention the chef, we want to make it engaging\n"
-        f"Make sure to keep it VERY VERY SHORT and do NOT mention {chef} in it or their country name or city name!"
-        f"Use this mapping to add if their boy or girl {CHEFS_MAP}."
+        f"Make sure to keep it VERY VERY SHORT and do NOT mention {chef} in it!"
     )
     if random:
         prompt += ("Start with 'Lets roast some chef with ... characteristics' like: let's roast a boy in tech world,"
@@ -249,24 +231,9 @@ def roast_chef(request):
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "roast": roast}
 
-def remove_chef_name_from_roast(roast: str, chefs: list, chefs_map=CHEFS_MAP):
-    roast = roast.lower()
-    # Loop through each chef's name in the list and remove it from the roast
-    for chef in chefs:
-        chef = chef.lower()
-        try:
-            # Use regex to replace exact matches only
-            roast = re.sub(rf'\b{re.escape(chef)}\b', chefs_map[chef], roast)
-        except KeyError:
-            print(f"{chef} name not found")
-            pass
-    # Return the modified roast string
-    return roast.strip()
-
 def generate_roast_image_url(request):
     print("!!", request)
     roast = request['roast']
-    roast = remove_chef_name_from_roast(roast=roast, chefs=CHEFS)
 
     roast_image_url = create_image(roast)
 
