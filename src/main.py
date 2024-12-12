@@ -76,7 +76,8 @@ def roast():
     real_image, image_with_hat = get_image(result['name'])
     return jsonify({
         "url": sign_image(image_with_hat),
-        "roast": result['roast'].replace('"', '')
+        "roast": result['roast'].replace('"', ''),
+        "roast_audio_s3_url": result['roast_audio_s3_url']
     })
 
 

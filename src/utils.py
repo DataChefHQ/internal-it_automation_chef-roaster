@@ -29,3 +29,85 @@ def read_txt_file(filename: str) -> str:
     with open(filename, 'r') as file:
         content = file.read()
     return content
+
+def synthesize_speech_to_stream(text, voice_id="Matthew", language_code="en-US"):
+    """
+    Converts text to speech using Amazon Polly and returns the audio stream.
+
+    :param text: The text to convert to speech.
+    :param voice_id: The voice ID to use (e.g., Joanna, Matthew).
+    :param language_code: The language code (e.g., en-US for US English).
+    :return: AudioStream of the synthesized speech.
+    """
+    # Initialize Polly client
+    polly_client = boto3.client('polly', region_name="us-east-1")
+
+    try:
+        # Request speech synthesis
+        response = polly_client.synthesize_speech(
+            Text=text,
+            OutputFormat='mp3',
+            VoiceId=voice_id,
+            LanguageCode=language_code
+        )
+        return response['AudioStream']
+    except Exception as e:
+        print(f"An error occurred during speech synthesis: {e}")
+        raise
+
+
+def upload_to_s3_and_get_presigned_url(audio_stream, s3_bucket, s3_key, expiration=3600):
+    """
+    Uploads an audio stream to S3 and generates a pre-signed URL.
+
+    :param audio_stream: The audio stream to upload.
+    :param s3_bucket: The name of the S3 bucket.
+    :param s3_key: The key (path) for the file in S3.
+    :param expiration: Time in seconds for the pre-signed URL to remain valid.
+    :return: A pre-signed URL for the uploaded file.
+    """
+    # Initialize S3 client
+    s3_client = boto3.client('s3', region_name="us-east-1")
+
+    try:
+        # Upload audio stream directly to S3
+        s3_client.put_object(
+            Bucket=s3_bucket,
+            Key=s3_key,
+            Body=audio_stream.read(),
+            ContentType='audio/mpeg'
+        )
+
+        # Generate a pre-signed URL
+        presigned_url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': s3_bucket, 'Key': s3_key},
+            ExpiresIn=expiration
+        )
+        return presigned_url
+    except Exception as e:
+        print(f"An error occurred during S3 upload or URL generation: {e}")
+        raise
+
+
+def text_to_speech_s3(text, s3_bucket, s3_key, voice_id="Matthew", language_code="en-US", expiration=3600):
+    """
+    Combines text-to-speech conversion and S3 upload with a pre-signed URL.
+
+    :param text: The text to convert to speech.
+    :param s3_bucket: The name of the S3 bucket.
+    :param s3_key: The key (path) for the file in S3.
+    :param voice_id: The voice ID to use (e.g., Joanna, Matthew).
+    :param language_code: The language code (e.g., en-US for US English).
+    :param expiration: Time in seconds for the pre-signed URL to remain valid.
+    :return: A pre-signed URL for the uploaded file.
+    """
+    try:
+        audio_stream = synthesize_speech_to_stream(text, voice_id, language_code)
+        presigned_url = upload_to_s3_and_get_presigned_url(audio_stream, s3_bucket, s3_key, expiration)
+        print(f"Speech synthesis complete. File uploaded to S3 and available at {presigned_url}")
+        return presigned_url
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
+

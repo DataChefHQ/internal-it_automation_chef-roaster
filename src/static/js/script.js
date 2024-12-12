@@ -35,7 +35,7 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
-        //Start typing the response
+        // Start typing the response
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
@@ -60,9 +60,16 @@ function submitForm() {
                 document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
                 document.getElementById("image-chef").style.display = 'block';
                 document.getElementById("bg-image").style.display = 'none';
+
+                // Play roast audio and type roast text
+                var roastAudio = new Audio(data.roast_audio_s3_url);
+                roastAudio.play().catch((error) => {
+                    console.error("Audio playback failed:", error);
+                });
+
                 var typewriter = new Typewriter(resp, {
                     loop: false,
-                    delay: 25,
+                    delay: 40,
                     cursor: '|',
                 });
                 typewriter

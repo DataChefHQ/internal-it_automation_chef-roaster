@@ -1,8 +1,9 @@
 import os
 import random
+import uuid
 from typing import Dict, Any
 import openai
-from .utils import get_openai_api_key, read_txt_file
+from .utils import get_openai_api_key, read_txt_file, text_to_speech_s3
 
 
 openai.api_key = get_openai_api_key()
@@ -15,6 +16,7 @@ MAX_INPUT_LEN = 5000
 CHEFS = [i.split(".txt")[0] for i in os.listdir("src/roasts")]
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
 CHEFS_ROAST_ALL = "\n".join(CHEFS_ROAST.keys())
+ROAST_S3_BUCKET = "test-chefroaster"
 
 def create_image(prompt: str) -> str:
     """
@@ -237,7 +239,12 @@ def roast_chef(request: Dict[str, str]) -> Dict[str, str]:
         user_message=user_message, chef_to_roast=guessed_chef, descriptions=CHEFS_ROAST[guessed_chef]
     )
     print(f"$$$ {roast}")
-    return {"name": guessed_chef, "roast": roast}
+    
+    s3_key = f"audio/{uuid.uuid4().hex}.mp3"
+    roast_audio_s3_url = text_to_speech_s3(roast, ROAST_S3_BUCKET, s3_key, expiration=604800)
+    print(f"%%% {roast_audio_s3_url}")
+
+    return {"name": guessed_chef, "roast": roast, "roast_audio_s3_url": roast_audio_s3_url}
 
 def generate_roast_image_url(request: Dict[str, str]) -> Dict[str, str]:
     """
