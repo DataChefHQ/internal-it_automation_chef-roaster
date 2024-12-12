@@ -34,7 +34,6 @@ def read_txt_file(filename: str) -> str:
 
 openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
-MODEL_ID = "amazon.nova-pro-v1:0" # anthropic.claude-3-sonnet-20240229-v1:0 anthropic.claude-3-5-sonnet-20240620-v1:0 anthropic.claude-3-5-sonnet-20241022-v2:0
 OPENAI_MODEL_NAME = "gpt-4o"
 TEMPERATURE = 0.85
 TOP_P = 0.75
@@ -73,44 +72,6 @@ def create_image(prompt: str) -> str:
     print(f"Created Image with #{prompt}# with URL: {image_url}!")
 
     return image_url
-
-def guess_the_chef_name(user_message: str, descriptions: str) -> str:
-    """
-    Get a response from the Bedrock AI model.
-    """
-    prompt = f"Persons Descriptions: \n{descriptions}\nUser input: {user_message}\nBased on the User input and the descriptions of the persons above, guess who is the input is about? NO MATTER WHAT ONLY output their name without anything before or after it."
-    messages = [{"role": "user", "content": [{"text": prompt}]}]
-    bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
-    
-    try:
-        response = bedrock_runtime.converse(
-            modelId=MODEL_ID,
-            messages=messages,
-            inferenceConfig={"temperature": TEMPERATURE, "topP": TOP_P, "maxTokens": MAX_LEN}
-        )
-        response_text = response["output"]["message"]["content"][0]["text"]
-        return response_text
-    except ClientError as e:
-        return f"Error communicating with Bedrock: {str(e)}"
-
-def get_the_roast(user_message: str, chef_to_roast: str, descriptions: str) -> str:
-    """
-    Get a response from the Bedrock AI model.
-    """
-    prompt = f"DataChef Roasting Party! \n\nHere's the next person: {chef_to_roast}. Some information about them:\n{descriptions}\n\nYour task: Roast {chef_to_roast}. Pick just one thing from the description to focus on, and deliver the funniest, most savage roast you can. Keep it SHORT, FUNNY, and SPICY. Do NOT try to use everything in the description—pick only ONE thing and go all in. ONLY GIVE ME THE ROAST, NOTHING ELSE!"
-    messages = [{"role": "user", "content": [{"text": prompt}]}]
-    bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
-    
-    try:
-        response = bedrock_runtime.converse(
-            modelId=MODEL_ID,
-            messages=messages,
-            inferenceConfig={"temperature": TEMPERATURE, "topP": TOP_P, "maxTokens": MAX_LEN}
-        )
-        response_text = response["output"]["message"]["content"][0]["text"]
-        return response_text
-    except ClientError as e:
-        return f"Error communicating with Bedrock: {str(e)}"
 
 def openai_guess_the_chef_name(user_message: str, descriptions: str) -> str:
     """
@@ -278,7 +239,6 @@ def find_chef(request):
 
     return {"name": guessed_chef, "reason": reason}
 
-
 def roast_chef(request):
     user_message = request['prompt']
     guessed_chef = request['chef']
@@ -288,7 +248,6 @@ def roast_chef(request):
     )
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "roast": roast}
-
 
 def remove_chef_name_from_roast(roast: str, chefs: list, chefs_map=CHEFS_MAP):
     roast = roast.lower()
