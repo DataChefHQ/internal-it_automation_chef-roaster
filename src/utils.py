@@ -154,7 +154,12 @@ def upload_image_to_s3(image_url, bucket_name, s3_key):
             Body=response.content,
             ContentType=response.headers['Content-Type']  # Preserve the original content type
         )
-        return f"s3://{bucket_name}/{s3_key}"
+        presigned_url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket_name, 'Key': s3_key},
+            ExpiresIn=604800
+        )
+        return presigned_url
     except requests.exceptions.RequestException as e:
         print(f"Error fetching the image: {e}")
     except Exception as e:

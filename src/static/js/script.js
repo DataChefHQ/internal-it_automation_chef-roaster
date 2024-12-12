@@ -1,14 +1,18 @@
 // var typewriter;
 document.addEventListener('DOMContentLoaded', () => {
-    const resp = document.getElementById("response");
-    typewriter = new Typewriter(resp, {
-        loop: false,
-        delay: 25,
-        cursor: '|',
-    });
-    typewriter
-        .typeString("Let's get started! Describe your Chef and I'll roast them for you.")
-        .start();
+    const currentURL = window.location.href;
+    const url = new URL(currentURL);
+    if(url.pathname === '/') {
+        const resp = document.getElementById("response");
+        typewriter = new Typewriter(resp, {
+            loop: false,
+            delay: 25,
+            cursor: '|',
+        });
+        typewriter
+            .typeString("Let's get started! Describe your Chef and I'll roast them for you.")
+            .start();
+    }
 });
 
 
@@ -54,7 +58,7 @@ function submitForm() {
         setTimeout(function () {
             fetch('/roast', {
                 method: 'POST',
-                body: JSON.stringify({prompt: prompt, chef: data.name}),
+                body: JSON.stringify({prompt: prompt, chef: data.name, roast_id: data.roast_id}),
                 headers: {'Content-Type': 'application/json'}
             }).then(
                 response => response.json()
@@ -130,7 +134,7 @@ function copyToClipboard() {
     // The value to copy to the clipboard
     const currentURL = window.location.href;
     const url = new URL(currentURL);
-    url.pathname = document.getElementById("roast_id").innerText;
+    url.pathname = "share/" + document.getElementById("roast_id").innerText;
     const textToCopy = url.href;
 
     // Use the Clipboard API to write the text

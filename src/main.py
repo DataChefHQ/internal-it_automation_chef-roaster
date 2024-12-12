@@ -4,10 +4,12 @@ from flask import Flask, render_template, jsonify, request
 import boto3
 import awsgi
 from .bedrock import find_chef, roast_chef, generate_roast_image_url
+from .utils import load_json_from_s3
 
 app = Flask(__name__)
 s3 = boto3.client('s3')
 bucket = os.environ.get('BUCKET_NAME', "chef-roaster")
+ROAST_S3_BUCKET = "test-chefroaster"
 
 
 @app.after_request
@@ -53,6 +55,19 @@ def get_image(chef):
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
+
+
+@app.route('/share/<roast_id>', methods=['GET'])
+def share(roast_id):
+    result = load_json_from_s3(ROAST_S3_BUCKET, f"roasts/{roast_id}.json")
+    real_image, image_with_hat = get_image(result['name'])
+    return render_template(
+        'index.html',
+        image=sign_image(image_with_hat),
+        roast_image=result['roast_image_url'],
+        roast= result['roast'].replace('"', ''),
+        roast_audio_s3_url= result['roast_audio_s3_url'],
+    )
 
 
 @app.route('/bedrock', methods=['GET', 'POST'])

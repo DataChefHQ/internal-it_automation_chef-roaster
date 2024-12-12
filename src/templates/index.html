@@ -23,12 +23,20 @@
 
         <div class="container">
             <div style="min-height: 540px;">
-                <div class="image-container">
-                    <img class="background-image" id="bg-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
-                    <img class="overlay-image" id="image-chef">
-                    <img class="overlay-image" id="image-roast">
-                </div>
-                <div class="response-text" id="response"></div>
+                {% if image %}
+                    <div class="image-container">
+                        <img class="overlay-image" id="image-chef" style="display: block;" src={{ image }}>
+                        <img class="overlay-image" id="image-roast" style="display: block;" src={{ roast_image }}>
+                    </div>
+                    <div class="response-text" id="response">{{ roast }}</div>
+                {% else %}
+                    <div class="image-container">
+                        <img class="background-image" id="bg-image" src="https://chef-roaster.s3.eu-west-1.amazonaws.com/chef_roast_placeholder.webp" />
+                        <img class="overlay-image" id="image-chef">
+                        <img class="overlay-image" id="image-roast">
+                    </div>
+                    <div class="response-text" id="response"></div>
+                {% endif %}
             </div>
 
             <div class="describe">
