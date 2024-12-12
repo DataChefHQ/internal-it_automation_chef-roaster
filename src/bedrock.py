@@ -15,7 +15,7 @@ MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
 CHEFS = [i.split(".txt")[0] for i in os.listdir("src/roasts")]
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
-CHEFS_ROAST_ALL = "\n".join(CHEFS_ROAST.keys())
+CHEFS_ROAST_ALL = "\n\n".join(CHEFS_ROAST.values())
 ROAST_S3_BUCKET = "test-chefroaster"
 
 def create_image(prompt: str) -> str:
@@ -119,24 +119,19 @@ def openai_get_the_roast(user_message: str, chef_to_roast: str, descriptions: st
     except openai.error.OpenAIError as e:
         return f"Error communicating with OpenAI: {str(e)}"
 
-def openai_get_reasoning(user_message: str, descriptions: str, chef: str, random: bool) -> str:
+def openai_get_reasoning(user_message: str, chef_description: str, chef: str, random: bool) -> str:
     """
     Uses OpenAI's API to generate the reason why the chef is chosen.
 
     Args:
         user_message (str): The user's input message.
-        descriptions (str): Descriptions of the chef.
+        chef_description (str): Descriptions of the chef.
         chef (str): The name of the chef.
         random (bool): Whether the chef is randomly chosen.
     Returns:
         str: The guessed chef's name or an error message.
     """
 
-    descriptions = descriptions.split("*")
-    chef_description = "No description"
-    for description in descriptions:
-        if chef.lower() in description.strip().lower()[:15]:
-            chef_description = description
 
     prompt = (
         f"User input: {user_message}\n"
@@ -210,14 +205,14 @@ def find_chef(request: Dict[str, Any]) -> Dict[str, str]:
         print(f"### {guessed_chef}")
         
         reason = openai_get_reasoning(
-            user_message=user_message, descriptions=CHEFS_ROAST_ALL, chef=guessed_chef, random=False
+            user_message=user_message, chef_description=CHEFS_ROAST[guessed_chef], chef=guessed_chef, random=False
         )
     else:
         # choose randomly
         guessed_chef = check_and_handle_miss_guessed_chef("")
         print(f"#### {guessed_chef}")
         reason = openai_get_reasoning(
-            user_message=user_message, descriptions=CHEFS_ROAST_ALL, chef=guessed_chef, random=True
+            user_message=user_message, chef_description=CHEFS_ROAST[guessed_chef], chef=guessed_chef, random=True
         )
 
     return {"name": guessed_chef, "reason": reason}
