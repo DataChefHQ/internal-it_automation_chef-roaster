@@ -312,8 +312,3 @@ def generate_roast_image_url(request):
     roast_image_url = create_image(roast)
 
     return {"roast_image_url": roast_image_url}
-
-
-if __name__ == "__main__":
-    res = openai_get_reasoning("CEO", DESCRIPTIONS, "Ashkan", random=True)
-    print(res)
