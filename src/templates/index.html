@@ -14,6 +14,10 @@
 <body>
     {% include 'header.html' %}
 
+    <button id="share-button" class="share-button" onclick="copyToClipboard()">Share the roast</button>
+    <div class="copied-message" id="copiedMessage">Copied to clipboard!</div>
+    <div id="roast_id" style="display: none"></div>
+
     <div class="central">
         <h1 class="heading-text"> 🎄 Chef Roaster 🔥</h1>
 

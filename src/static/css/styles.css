@@ -203,10 +203,10 @@ footer a {
 
 .github-link {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 20px;
     color: #fff;
-    background-color: #444;
+    background-color: #0077ee;
     padding: 8px 12px;
     border-radius: 5px;
     text-decoration: none;
@@ -215,5 +215,35 @@ footer a {
 }
 
 .github-link:hover {
-    background-color: #777;
+    background-color: #2299ff;
+}
+
+.share-button {
+    position: fixed;
+    display: none;
+    top: 15px;
+    right: 15px;
+    padding: 10px 20px;
+    background-color: #0077ee;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000; /* Ensure it stays above other elements */
+}
+.share-button:hover {
+    background-color: #2299ff;
+}
+.copied-message {
+    position: fixed;
+    top: 55px;
+    right: 8px;
+    color: green;
+    font-size: 14px;
+    display: none;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }

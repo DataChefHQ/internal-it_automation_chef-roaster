@@ -1,4 +1,3 @@
-
 // var typewriter;
 document.addEventListener('DOMContentLoaded', () => {
     const resp = document.getElementById("response");
@@ -8,10 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor: '|',
     });
     typewriter
-      .typeString("Let's get started! Describe your Chef and I'll roast them for you.")
-      .start();
+        .typeString("Let's get started! Describe your Chef and I'll roast them for you.")
+        .start();
 });
-
 
 
 function submitForm() {
@@ -25,13 +23,14 @@ function submitForm() {
     document.getElementById("image-roast").style.display = 'none';
     document.getElementById("bg-image").style.display = 'block';
     document.getElementById("response").innerText = "";
+    document.getElementById("share-button").style.display = 'none';
 
     // Get the prompt text
     var prompt = document.getElementById("prompt").value;
     fetch('/find', {
         method: 'POST',
-        body: JSON.stringify({ prompt: prompt }),
-        headers: { 'Content-Type': 'application/json' }
+        body: JSON.stringify({prompt: prompt}),
+        headers: {'Content-Type': 'application/json'}
     }).then(
         response => response.json()
     ).then(data => {
@@ -48,15 +47,15 @@ function submitForm() {
             cursor: '|',
         });
         typewriter
-          .typeString(data.reason)
-          .start();
+            .typeString(data.reason)
+            .start();
 
         // Get the image describing the roast
-        setTimeout(function() {
+        setTimeout(function () {
             fetch('/roast', {
                 method: 'POST',
-                body: JSON.stringify({ prompt: prompt, chef: data.name }),
-                headers: { 'Content-Type': 'application/json' }
+                body: JSON.stringify({prompt: prompt, chef: data.name}),
+                headers: {'Content-Type': 'application/json'}
             }).then(
                 response => response.json()
             ).then(data => {
@@ -65,6 +64,8 @@ function submitForm() {
                 document.getElementById("roast-button-loading").textContent = 'Generating image... 🔥';
                 document.getElementById("image-chef").style.display = 'block';
                 document.getElementById("bg-image").style.display = 'none';
+
+                document.getElementById("roast_id").innerText = data.roast_id;
 
                 // Play roast audio and type roast text
                 var roastAudio = new Audio(data.roast_audio_s3_url);
@@ -85,8 +86,8 @@ function submitForm() {
 
         fetch('/image', {
             method: 'POST',
-            body: JSON.stringify({ roast: data.reason }),
-            headers: { 'Content-Type': 'application/json' }
+            body: JSON.stringify({roast: data.reason}),
+            headers: {'Content-Type': 'application/json'}
         }).then(
             response => response.json()
         ).then(data => {
@@ -95,6 +96,7 @@ function submitForm() {
             document.getElementById("roast-button-loading").style.display = 'none';
             document.getElementById("image-roast").src = data.roast_image_url;
             document.getElementById("image-roast").style.display = 'block';
+            document.getElementById("share-button").style.display = 'block';
         });
 
     });
@@ -120,4 +122,28 @@ function createSnowflake() {
         snowflake.remove();
     }, 20000);
 }
+
 setInterval(createSnowflake, 600);
+
+
+function copyToClipboard() {
+    // The value to copy to the clipboard
+    const currentURL = window.location.href;
+    const url = new URL(currentURL);
+    url.pathname = document.getElementById("roast_id").innerText;
+    const textToCopy = url.href;
+
+    // Use the Clipboard API to write the text
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Show the "Copied" message
+        const messageElement = document.getElementById('copiedMessage');
+        messageElement.style.display = 'block';
+
+        // Hide the message after 2 seconds
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
