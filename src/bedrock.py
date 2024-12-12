@@ -215,7 +215,10 @@ def find_chef(request: Dict[str, Any]) -> Dict[str, str]:
             user_message=user_message, chef_description=CHEFS_ROAST[guessed_chef], chef=guessed_chef, random=True
         )
 
-    return {"name": guessed_chef, "reason": reason}
+    s3_key = f"audio/{uuid.uuid4().hex}-guess.mp3"
+    audio_s3_url = text_to_speech_s3(reason, ROAST_S3_BUCKET, s3_key, expiration=604800)
+
+    return {"name": guessed_chef, "reason": reason, 'audio_url': audio_s3_url}
 
 def roast_chef(request: Dict[str, str]) -> Dict[str, str]:
     """

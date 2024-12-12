@@ -35,11 +35,16 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
+        var roastAudio = new Audio(data.audio_url);
+        roastAudio.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+        });
+
         // Start typing the response
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
-            delay: 25,
+            delay: 51,
             cursor: '|',
         });
         typewriter
@@ -69,14 +74,14 @@ function submitForm() {
 
                 var typewriter = new Typewriter(resp, {
                     loop: false,
-                    delay: 40,
+                    delay: 51,
                     cursor: '|',
                 });
                 typewriter
                     .typeString(data.roast)
                     .start();
             })
-        }, 3000);
+        }, 2000);
 
         fetch('/image', {
             method: 'POST',
