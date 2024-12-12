@@ -43,7 +43,7 @@ function submitForm() {
         var resp = document.getElementById("response");
         var typewriter = new Typewriter(resp, {
             loop: false,
-            delay: 51,
+            delay: 45,
             cursor: '|',
         });
         typewriter
@@ -75,18 +75,18 @@ function submitForm() {
 
                 var typewriter = new Typewriter(resp, {
                     loop: false,
-                    delay: 51,
+                    delay: 45,
                     cursor: '|',
                 });
                 typewriter
                     .typeString(data.roast)
                     .start();
             })
-        }, 2000);
+        }, 3000);
 
         fetch('/image', {
             method: 'POST',
-            body: JSON.stringify({roast: data.reason}),
+            body: JSON.stringify({roast: data.reason, roast_id: data.roast_id}),
             headers: {'Content-Type': 'application/json'}
         }).then(
             response => response.json()

@@ -3,7 +3,7 @@ import random
 import uuid
 from typing import Dict, Any
 import openai
-from .utils import get_openai_api_key, read_txt_file, text_to_speech_s3, save_json_to_s3
+from .utils import get_openai_api_key, read_txt_file, text_to_speech_s3, save_json_to_s3, load_json_from_s3, upload_image_to_s3
 
 openai.api_key = get_openai_api_key()
 REGION = "us-east-1"
@@ -259,5 +259,12 @@ def generate_roast_image_url(request: Dict[str, str]) -> Dict[str, str]:
     roast = request['roast']
 
     roast_image_url = create_image(roast)
+
+    roast_id = request['roast_id']
+    image_url = upload_image_to_s3(roast_image_url, ROAST_S3_BUCKET, f"images/{roast_id}.jpg")
+
+    result = load_json_from_s3(ROAST_S3_BUCKET, f"audio/{roast_id}.json")
+    result['roast_image_url'] = image_url
+    save_json_to_s3(ROAST_S3_BUCKET, f"audio/{roast_id}.json", result)
 
     return {"roast_image_url": roast_image_url}

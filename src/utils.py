@@ -1,6 +1,7 @@
 import json
 import boto3
 from botocore.exceptions import ClientError
+import requests
 
 s3_client = boto3.client('s3', region_name="us-east-1")
 
@@ -135,3 +136,27 @@ def load_json_from_s3(bucket_name, object_key):
     response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
     json_data = response['Body'].read().decode('utf-8')  # Read and decode the body
     return json.loads(json_data)  # Parse JSON into a dictionary
+
+
+def upload_image_to_s3(image_url, bucket_name, s3_key):
+    try:
+        # Fetch the image content from the URL
+        response = requests.get(image_url)
+        response.raise_for_status()  # Raise an error for HTTP errors
+
+        # Initialize the S3 client
+        s3_client = boto3.client('s3', region_name="us-east-1")
+
+        # Upload the image to S3
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=s3_key,
+            Body=response.content,
+            ContentType=response.headers['Content-Type']  # Preserve the original content type
+        )
+        return f"s3://{bucket_name}/{s3_key}"
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching the image: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    return ""
