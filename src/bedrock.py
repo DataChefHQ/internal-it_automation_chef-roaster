@@ -195,20 +195,18 @@ def find_chef(request: Dict[str, Any]) -> Dict[str, str]:
     Returns:
         Dict[str, str]: A dictionary with the guessed chef's name and the reasoning.
     """
-    try:
-        user_message = request['prompt']
-    except KeyError:
-        user_message = request['message']
+    user_message = request['prompt']
+
     if len(user_message) >= MAX_INPUT_LEN:
         user_message = request['prompt'][:MAX_INPUT_LEN]
-    if user_message == "":
-        user_message = "No Description Available!"
 
-    if user_message != "No Description Available!":
+    if user_message != "":
         guessed_chef = openai_guess_the_chef_name(user_message=user_message, descriptions=CHEFS_ROAST_ALL)
         print(f"## {guessed_chef}")
+        
         guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
         print(f"### {guessed_chef}")
+        
         reason = openai_get_reasoning(
             user_message=user_message, descriptions=CHEFS_ROAST_ALL, chef=guessed_chef, random=False
         )

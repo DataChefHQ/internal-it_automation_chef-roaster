@@ -30,7 +30,7 @@ function submitForm() {
     var prompt = document.getElementById("prompt").value;
     fetch('/find', {
         method: 'POST',
-        body: JSON.stringify({ message: prompt }),
+        body: JSON.stringify({ prompt: prompt }),
         headers: { 'Content-Type': 'application/json' }
     }).then(
         response => response.json()
