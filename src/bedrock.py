@@ -1,5 +1,6 @@
 import os
 import random
+from typing import Dict, Any
 import openai
 from .utils import get_openai_api_key, read_txt_file
 
@@ -16,6 +17,15 @@ CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for
 CHEFS_ROAST_ALL = "\n".join(CHEFS_ROAST.keys())
 
 def create_image(prompt: str) -> str:
+    """
+    Generates an image based on the provided prompt using OpenAI's DALL-E model.
+
+    Args:
+        prompt (str): The text prompt to generate the image.
+
+    Returns:
+        str: The URL of the generated image.
+    """
     response = openai.Image.create(
         model="dall-e-3",
         prompt=prompt,
@@ -157,7 +167,17 @@ def openai_get_reasoning(user_message: str, descriptions: str, chef: str, random
     except openai.error.OpenAIError as e:
         return f"Error communicating with OpenAI: {str(e)}"
     
-def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
+def check_and_handle_miss_guessed_chef(guessed_chef: str, chefs: list = CHEFS) -> str:
+    """
+    Checks if the guessed chef exists in the list of chefs and handles mismatches.
+
+    Args:
+        guessed_chef (str): The name of the guessed chef.
+        chefs (list, optional): List of valid chef names. Defaults to CHEFS.
+
+    Returns:
+        str: A valid chef name, either the correctly guessed name or a random chef.
+    """
     lower_chefs = [i.lower() for i in chefs]
     if guessed_chef.lower() in lower_chefs:
         return guessed_chef.lower()
@@ -165,7 +185,16 @@ def check_and_handle_miss_guessed_chef(guessed_chef, chefs=CHEFS):
         print("Guess Randomly")
         return random.choice(chefs).lower()
 
-def find_chef(request):
+def find_chef(request: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Identifies the chef based on the user message and provides a reasoning.
+
+    Args:
+        request (Dict[str, Any]): The request containing the user prompt.
+
+    Returns:
+        Dict[str, str]: A dictionary with the guessed chef's name and the reasoning.
+    """
     try:
         user_message = request['prompt']
     except KeyError:
@@ -193,7 +222,16 @@ def find_chef(request):
 
     return {"name": guessed_chef, "reason": reason}
 
-def roast_chef(request):
+def roast_chef(request: Dict[str, str]) -> Dict[str, str]:
+    """
+    Generates a roast for the specified chef based on the user message.
+
+    Args:
+        request (Dict[str, str]): A dictionary containing the user message and the chef's name.
+
+    Returns:
+        Dict[str, str]: A dictionary with the chef's name and the generated roast.
+    """
     user_message = request['prompt']
     guessed_chef = request['chef']
 
@@ -203,7 +241,16 @@ def roast_chef(request):
     print(f"$$$ {roast}")
     return {"name": guessed_chef, "roast": roast}
 
-def generate_roast_image_url(request):
+def generate_roast_image_url(request: Dict[str, str]) -> Dict[str, str]:
+    """
+    Generates an image URL based on the roast text.
+
+    Args:
+        request (Dict[str, str]): A dictionary containing the roast text.
+
+    Returns:
+        Dict[str, str]: A dictionary with the generated image URL.
+    """
     print("!!", request)
     roast = request['roast']
 
