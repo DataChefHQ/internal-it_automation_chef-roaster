@@ -3,7 +3,7 @@ import random
 from botocore.exceptions import ClientError
 import openai
 import json
-import re
+import os
 
 def get_openai_api_key():
     secret_name = "OPENAI_API_KEY"
@@ -39,16 +39,16 @@ TEMPERATURE = 0.85
 TOP_P = 0.75
 MAX_LEN = 1024
 MAX_INPUT_LEN = 5000
-CHEFS = ["Ali", "Anne", "Ashkan", "Bram", "Davide", "Farbod", "Federico", "Jane", "Kiarash", "Mahdokht", "Melvyn", "Pejman", "Rehan", "Shahin", "Soheil"]
-DESCRIPTIONS = read_txt_file("src/prompts/descriptions.txt")
+CHEFS = [i.split(".txt")[0] for i in os.listdir("src/roasts")]
 CHEFS_ROAST = {chef.lower(): read_txt_file(f"src/roasts/{chef.lower()}.txt") for chef in CHEFS}
+CHEFS_ROAST_ALL = "\n".join(CHEFS_ROAST.keys())
 
 def create_image(prompt: str) -> str:
     response = openai.Image.create(
         model="dall-e-3",
         prompt=prompt,
-        n=1,  # Number of images to generate
-        size="1024x1024"  # Image size options: 256x256, 512x512, or 1024x1024
+        n=1,
+        size="1024x1024"
     )
 
     image_url = response['data'][0]['url']
@@ -204,19 +204,19 @@ def find_chef(request):
         user_message = "No Description Available!"
 
     if user_message != "No Description Available!":
-        guessed_chef = openai_guess_the_chef_name(user_message=user_message, descriptions=DESCRIPTIONS)
+        guessed_chef = openai_guess_the_chef_name(user_message=user_message, descriptions=CHEFS_ROAST_ALL)
         print(f"## {guessed_chef}")
         guessed_chef = check_and_handle_miss_guessed_chef(guessed_chef)
         print(f"### {guessed_chef}")
         reason = openai_get_reasoning(
-            user_message=user_message, descriptions=DESCRIPTIONS, chef=guessed_chef, random=False
+            user_message=user_message, descriptions=CHEFS_ROAST_ALL, chef=guessed_chef, random=False
         )
     else:
         # choose randomly
         guessed_chef = check_and_handle_miss_guessed_chef("")
         print(f"#### {guessed_chef}")
         reason = openai_get_reasoning(
-            user_message=user_message, descriptions=DESCRIPTIONS, chef=guessed_chef, random=True
+            user_message=user_message, descriptions=CHEFS_ROAST_ALL, chef=guessed_chef, random=True
         )
 
     return {"name": guessed_chef, "reason": reason}
