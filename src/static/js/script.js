@@ -1,4 +1,5 @@
-// var typewriter;
+let isMuted = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     const currentURL = window.location.href;
     const url = new URL(currentURL);
@@ -15,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const volumeIcon = document.getElementById('volumeIcon');
-    let isMuted = false;
-
     volumeIcon.addEventListener('click', () => {
       isMuted = !isMuted;
       if (isMuted) {
@@ -47,7 +46,7 @@ function submitForm() {
     var prompt = document.getElementById("prompt").value;
     fetch('/find', {
         method: 'POST',
-        body: JSON.stringify({prompt: prompt}),
+        body: JSON.stringify({prompt: prompt, muted:isMuted}),
         headers: {'Content-Type': 'application/json'}
     }).then(
         response => response.json()
@@ -72,7 +71,7 @@ function submitForm() {
         setTimeout(function () {
             fetch('/roast', {
                 method: 'POST',
-                body: JSON.stringify({prompt: prompt, chef: data.name, roast_id: data.roast_id}),
+                body: JSON.stringify({prompt: prompt, chef: data.name, roast_id: data.roast_id, muted:isMuted}),
                 headers: {'Content-Type': 'application/json'}
             }).then(
                 response => response.json()

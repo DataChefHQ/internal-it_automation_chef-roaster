@@ -215,8 +215,12 @@ def find_chef(request: Dict[str, Any]) -> Dict[str, str]:
         )
 
     roast_id = uuid.uuid4().hex
-    s3_key = f"audio/{roast_id}-guess.mp3"
-    audio_s3_url = text_to_speech_s3(reason, ROAST_S3_BUCKET, s3_key, expiration=604800)
+
+    if request['muted']:
+        audio_s3_url = None
+    else:
+        s3_key = f"audio/{roast_id}-guess.mp3"
+        audio_s3_url = text_to_speech_s3(reason, ROAST_S3_BUCKET, s3_key, expiration=604800)
 
     return {"name": guessed_chef, "reason": reason, 'audio_url': audio_s3_url, "roast_id": roast_id}
 
@@ -239,7 +243,10 @@ def roast_chef(request: Dict[str, str]) -> Dict[str, str]:
     print(f"$$$ {roast}")
     roast_id = request['roast_id']
 
-    roast_audio_s3_url = text_to_speech_s3(roast, ROAST_S3_BUCKET, f"audio/{roast_id}.mp3", expiration=604800)
+    if request['muted']:
+        roast_audio_s3_url = None
+    else:
+        roast_audio_s3_url = text_to_speech_s3(roast, ROAST_S3_BUCKET, f"audio/{roast_id}.mp3", expiration=604800)
     print(f"%%% {roast_audio_s3_url}")
 
     result = {"name": guessed_chef, "roast": roast, "roast_audio_s3_url": roast_audio_s3_url, "roast_id": roast_id}

@@ -220,7 +220,7 @@ footer a {
 
 .share-button {
     position: fixed;
-
+    display: none;
     top: 15px;
     right: 75px;
     padding: 10px 20px;
@@ -249,6 +249,7 @@ footer a {
 }
 
 .volume-icon {
+    display: block;
     font-size: 32px;
     position: fixed;
     top: 18px;
