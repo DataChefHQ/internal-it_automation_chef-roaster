@@ -19,11 +19,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Load .env File
+        run: |
+          set -a
+          [ -f .env ] && source .env
+          echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV
+          echo "AWS_ACCOUNT=$AWS_ACCOUNT" >> $GITHUB_ENV
+          set +a
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::640721796322:role/GithubCIRole
-          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/GithubCIRole
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Use Node.js v18.20.5
         uses: actions/setup-node@v3
