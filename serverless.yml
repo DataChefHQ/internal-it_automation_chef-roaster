@@ -5,6 +5,7 @@ plugins:
   - serverless-offline
   - serverless-plugin-warmup
   - serverless-python-requirements
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -26,7 +27,7 @@ provider:
   stage: prod
   memorySize: 768
   timeout: 30
-  region: us-east-1
+  region: ${env:AWS_REGION}
   lambdaHashingVersion: 20201221
   stackTags:
     owner: "Soheil Sheybani"
@@ -48,6 +49,26 @@ package:
     - venv/**
     - __pycache__/**
 
+resources:
+  Resources:
+    MyPublicS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${env:AWS_ACCOUNT}-chef-roaster
+        AccessControl: PublicRead
+    PublicBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref MyPublicS3Bucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action: "s3:GetObject"
+              Resource: !Sub "${MyPublicS3Bucket.Arn}/*"
+
 functions:
   app:
     handler: src/main.lambda_handler
@@ -61,4 +82,4 @@ functions:
           method: ANY
           path: /
     environment:
-      BUCKET_NAME: chef-roaster
+      BUCKET_NAME: ${env:AWS_ACCOUNT}-chef-roaster
