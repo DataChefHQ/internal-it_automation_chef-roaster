@@ -1,6 +1,9 @@
-# Chef Roaster 😈
+# AI Roaster 😈
 
 Chef Roaster is an AI-powered roasting platform where users can generate witty and hilarious "roasts" for chefs based on their characteristics. This project combines a serverless backend with dynamic AI processing, voice-based interactions, and customizable roast outputs.
+
+## How we roasted our teammates 😂
+[![Watch the Video](https://img.youtube.com/vi/example/0.jpg)](https://links.datachef.co/happy-2025-video)
 
 ## Features
 
@@ -10,20 +13,6 @@ Chef Roaster is an AI-powered roasting platform where users can generate witty a
 - 🔗 **Unique URL for Each Roast**: Easily share your roasts with victims via one-click URL sharing!
 - 🎙 **Voice Output Support**: Receive roasts as audio (Text-to-Speech (TTS)).
 
-## Roadmap
-
-### Planned Enhancements
-1. **Voice Input Support**:
-   - Submit roast descriptions through voice (powered by Speech-to-Text (STT)).
-     
-2. **Custom Roast Styles**:
-   - Choose from snarky, sarcastic, or kind roast templates.
-
-3. **Mobile Compatibility**:
-   - Enhance experience for mobile users.
-
-4. **Localization**:
-   - Add support for multiple languages.
 
 ## Tech Stack
 
