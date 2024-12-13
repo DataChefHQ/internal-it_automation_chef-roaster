@@ -220,9 +220,9 @@ footer a {
 
 .share-button {
     position: fixed;
-    display: none;
+
     top: 15px;
-    right: 15px;
+    right: 75px;
     padding: 10px 20px;
     background-color: #0077ee;
     color: white;
@@ -246,4 +246,17 @@ footer a {
     padding: 5px 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.volume-icon {
+    font-size: 32px;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    color: #bbb;
+    cursor: pointer;
+    user-select: none;
+}
+.volume-icon:hover {
+    color: #ddd;
 }

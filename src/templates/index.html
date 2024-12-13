@@ -7,13 +7,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
-    {% include 'header.html' %}
+    {% include 'github.html' %}
 
+    <div>
+        <i id="volumeIcon" class="fas fa-volume-up volume-icon"></i>
+    </div>
     <button id="share-button" class="share-button" onclick="copyToClipboard()">Share the roast</button>
     <div class="copied-message" id="copiedMessage">Copied to clipboard!</div>
     <div id="roast_id" style="display: none"></div>

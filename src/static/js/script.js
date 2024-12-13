@@ -13,6 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
             .typeString("Let's get started! Describe your Chef and I'll roast them for you.")
             .start();
     }
+
+    const volumeIcon = document.getElementById('volumeIcon');
+    let isMuted = false;
+
+    volumeIcon.addEventListener('click', () => {
+      isMuted = !isMuted;
+      if (isMuted) {
+        volumeIcon.classList.remove('fa-volume-up');
+        volumeIcon.classList.add('fa-volume-mute');
+      } else {
+        volumeIcon.classList.remove('fa-volume-mute');
+        volumeIcon.classList.add('fa-volume-up');
+      }
+    });
 });
 
 
