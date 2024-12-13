@@ -51,10 +51,12 @@ function submitForm() {
     }).then(
         response => response.json()
     ).then(data => {
-        var roastAudio = new Audio(data.audio_url);
-        roastAudio.play().catch((error) => {
-            console.error("Audio playback failed:", error);
-        });
+        if (!isMuted) {
+            var roastAudio = new Audio(data.audio_url);
+            roastAudio.play().catch((error) => {
+                console.error("Audio playback failed:", error);
+            });
+        }
 
         // Start typing the response
         var resp = document.getElementById("response");
@@ -85,10 +87,12 @@ function submitForm() {
                 document.getElementById("roast_id").innerText = data.roast_id;
 
                 // Play roast audio and type roast text
-                var roastAudio = new Audio(data.roast_audio_s3_url);
-                roastAudio.play().catch((error) => {
-                    console.error("Audio playback failed:", error);
-                });
+                if (!isMuted) {
+                    var roastAudio = new Audio(data.roast_audio_s3_url);
+                    roastAudio.play().catch((error) => {
+                        console.error("Audio playback failed:", error);
+                    });
+                }
 
                 var typewriter = new Typewriter(resp, {
                     loop: false,
