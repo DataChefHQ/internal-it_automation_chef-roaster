@@ -55,7 +55,15 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${env:AWS_ACCOUNT}-chef-roaster
-        AccessControl: PublicRead
+        PublicAccessBlockConfiguration: # Ensure the bucket allows public access
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+          OwnershipControls: # Ensure ObjectOwnership is compatible with public access
+            Rules:
+              - ObjectOwnership: ObjectWriter
+
     PublicBucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
