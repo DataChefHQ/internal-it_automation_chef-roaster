@@ -23,7 +23,7 @@ jobs:
         run: |
           set -a
           [ -f .env ] && source .env
-          echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV
+          echo "AWS_REGION=$REGION" >> $GITHUB_ENV
           echo "AWS_ACCOUNT=$AWS_ACCOUNT" >> $GITHUB_ENV
           set +a
 

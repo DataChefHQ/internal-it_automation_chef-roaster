@@ -27,7 +27,7 @@ provider:
   stage: prod
   memorySize: 768
   timeout: 30
-  region: ${env:AWS_REGION}
+  region: ${env:REGION}
   lambdaHashingVersion: 20201221
   stackTags:
     owner: "Soheil Sheybani"
@@ -54,7 +54,7 @@ resources:
     MyPublicS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${env:AWS_ACCOUNT}-chef-roaster
+        BucketName: ${env:AWS_ACCOUNT}-ai-roaster
         PublicAccessBlockConfiguration:
           BlockPublicAcls: false
           BlockPublicPolicy: false
@@ -90,4 +90,4 @@ functions:
           method: ANY
           path: /
     environment:
-      BUCKET_NAME: ${env:AWS_ACCOUNT}-chef-roaster
+      BUCKET_NAME: ${env:AWS_ACCOUNT}-ai-roaster
